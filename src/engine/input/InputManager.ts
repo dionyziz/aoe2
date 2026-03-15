@@ -1,6 +1,6 @@
 import type { EventBus } from '../EventBus';
 import type { Camera } from '../camera/Camera';
-import type { IsoProjection } from '../renderer/IsoProjection';
+import { IsoProjection } from '../renderer/IsoProjection';
 import { MouseState } from './MouseState';
 
 const DRAG_THRESHOLD = 5;
@@ -10,17 +10,16 @@ export class InputManager {
   private canvas: HTMLCanvasElement;
   private eventBus: EventBus;
   private camera: Camera;
-  private iso: IsoProjection;
   private middleDragLastX = 0;
   private middleDragLastY = 0;
+  private onContextMenu = (e: Event): void => { e.preventDefault(); };
 
-  constructor(canvas: HTMLCanvasElement, eventBus: EventBus, camera: Camera, iso: IsoProjection) {
+  constructor(canvas: HTMLCanvasElement, camera: Camera, eventBus: EventBus) {
     this.canvas = canvas;
     this.eventBus = eventBus;
     this.camera = camera;
-    this.iso = iso;
 
-    canvas.addEventListener('contextmenu', e => e.preventDefault());
+    canvas.addEventListener('contextmenu', this.onContextMenu);
     canvas.addEventListener('mousedown', this.onMouseDown);
     canvas.addEventListener('mousemove', this.onMouseMove);
     canvas.addEventListener('mouseup', this.onMouseUp);
@@ -80,7 +79,7 @@ export class InputManager {
       if (this.mouse.isDragging) {
         this.eventBus.emit('input:boxSelect', this.mouse.dragRect);
       } else {
-        const world = this.iso.screenToWorld(sx, sy, this.camera);
+        const world = IsoProjection.screenToWorld(sx, sy, this.camera);
         this.eventBus.emit('input:leftClick', { pos: { wx: world.x, wy: world.y }, screenX: sx, screenY: sy });
       }
       this.mouse.isLeftDown = false;
@@ -90,7 +89,7 @@ export class InputManager {
       this.eventBus.emit('input:middleDragEnd', undefined as never);
     } else if (e.button === 2) {
       this.mouse.isRightDown = false;
-      const world = this.iso.screenToWorld(sx, sy, this.camera);
+      const world = IsoProjection.screenToWorld(sx, sy, this.camera);
       this.eventBus.emit('input:rightClick', { pos: { wx: world.x, wy: world.y }, screenX: sx, screenY: sy });
     }
   };
@@ -116,4 +115,13 @@ export class InputManager {
   private onKeyUp = (e: KeyboardEvent): void => {
     this.eventBus.emit('input:keyup', { code: e.code });
   };
+
+  destroy(): void {
+    this.canvas.removeEventListener('contextmenu', this.onContextMenu);
+    this.canvas.removeEventListener('mousedown', this.onMouseDown);
+    this.canvas.removeEventListener('mousemove', this.onMouseMove);
+    this.canvas.removeEventListener('mouseup', this.onMouseUp);
+    window.removeEventListener('keydown', this.onKeyDown);
+    window.removeEventListener('keyup', this.onKeyUp);
+  }
 }

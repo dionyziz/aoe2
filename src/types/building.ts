@@ -1,5 +1,3 @@
-import type { TileCoord } from './common';
-
 export interface BuildingDef {
   id: string;
   name: string;
@@ -20,5 +18,10 @@ export interface BuildingInstance {
   currentHp: number;
   maxHp: number;
   constructionProgress: number; // 0..1
-  selected: boolean;
+  trainQueue: string[];
+  researchQueue: string[];
+  garrisonedUnitIds: number[];
+  isSelected: boolean;
+  // backward-compat alias
+  selected?: boolean;
 }

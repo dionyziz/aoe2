@@ -1,18 +1,12 @@
 import type { WorldPos, TileCoord } from './common';
 
-export type UnitClass = 'infantry' | 'archer' | 'cavalry' | 'siege' | 'villager' | 'monk' | 'ship';
+export type UnitClass = 'infantry' | 'archer' | 'cavalry' | 'siege' | 'villager' | 'monk' | 'ship' | 'hero' | 'unique';
 export type UnitAge = 'dark' | 'feudal' | 'castle' | 'imperial';
 export type AttackType = 'melee' | 'ranged' | 'siege' | 'special';
+export type UnitStateId = 'idle' | 'moving' | 'attacking' | 'gathering' | 'dead' | 'building' | 'garrisoned';
+export type CombatStance = 'aggressive' | 'defensive' | 'stand_ground' | 'no_attack';
 
 export interface ArmorClass { melee: number; pierce: number; }
-
-export enum UnitStateId {
-  Idle = 'idle',
-  Moving = 'moving',
-  Attacking = 'attacking',
-  Gathering = 'gathering',
-  Dead = 'dead'
-}
 
 export interface UnitDef {
   id: string;
@@ -45,9 +39,12 @@ export interface UnitInstance {
   pathIndex: number;
   state: UnitStateId;
   currentHp: number;
-  direction: number; // 0-7, 0=south clockwise
+  direction: number; // 0-7, 0=SE, 1=S, 2=SW, 3=W, 4=NW, 5=N, 6=NE, 7=E (clockwise from SE)
   animFrame: number;
   animTimer: number;
   selected: boolean;
   targetUnitId: number | null;
+  targetBuildingId: number | null;
+  stance: CombatStance;
+  garrisonedIn: number | null;
 }

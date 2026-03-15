@@ -1,7 +1,7 @@
 import type { MapData } from '../map/MapData';
 import type { Camera } from '../camera/Camera';
 import type { UnitInstance } from '../../types/unit';
-import type { IsoProjection } from '../renderer/IsoProjection';
+import type { IsoProjectionType } from '../renderer/IsoProjection';
 import { TerrainType } from '../../types/map';
 
 const MAP_SIZE = 180; // minimap pixel size
@@ -26,12 +26,12 @@ const PLAYER_COLORS: Record<number, string> = {
 
 export class Minimap {
   private mapData: MapData;
-  private iso: IsoProjection;
+  private iso: IsoProjectionType;
   private offscreen: OffscreenCanvas;
   private offCtx: OffscreenCanvasRenderingContext2D;
   private dirty = true;
 
-  constructor(mapData: MapData, iso: IsoProjection) {
+  constructor(mapData: MapData, iso: IsoProjectionType) {
     this.mapData = mapData;
     this.iso = iso;
     this.offscreen = new OffscreenCanvas(MAP_SIZE, MAP_SIZE);

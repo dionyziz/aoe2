@@ -1,30 +1,26 @@
 import type { UnitInstance } from '../../types/unit';
-import { UnitStateId } from '../../types/unit';
 import type { WorldPos, Rect } from '../../types/common';
 import type { EventBus } from '../EventBus';
 import type { AStar } from '../pathfinding/AStar';
 import type { NavGrid } from '../pathfinding/NavGrid';
-import type { IsoProjection } from '../renderer/IsoProjection';
+import type { IsoProjectionType } from '../renderer/IsoProjection';
 import type { Camera } from '../camera/Camera';
 import { createUnit } from './Unit';
 import { MovementSystem } from './MovementSystem';
-import { AnimationSystem } from '../animation/AnimationSystem';
-import { logger } from '../../utils/logger';
 
 export class UnitManager {
   readonly units: UnitInstance[] = [];
   private selectedIds = new Set<number>();
   private movementSystem = new MovementSystem();
-  private animSystem = new AnimationSystem();
   private astar: AStar;
   private navGrid: NavGrid;
-  private iso: IsoProjection;
+  private iso: IsoProjectionType;
   private camera: Camera;
   private eventBus: EventBus;
 
   constructor(
     eventBus: EventBus, astar: AStar, navGrid: NavGrid,
-    iso: IsoProjection, camera: Camera
+    iso: IsoProjectionType, camera: Camera
   ) {
     this.eventBus = eventBus;
     this.astar = astar;
@@ -59,7 +55,6 @@ export class UnitManager {
   update(dt: number): void {
     for (const unit of this.units) {
       this.movementSystem.update(unit, dt);
-      this.animSystem.update(unit, dt);
     }
   }
 
@@ -91,7 +86,6 @@ export class UnitManager {
       clicked.selected = true;
       this.selectedIds.add(clicked.id);
       this.eventBus.emit('unit:selected', { ids: [clicked.id] });
-      logger.debug(`Selected unit ${clicked.id}`);
     } else {
       this.eventBus.emit('unit:selected', { ids: [] });
     }
@@ -105,13 +99,14 @@ export class UnitManager {
 
     selected.forEach((unit, i) => {
       const goal = targets[i];
+      if (!goal) return;
       const startTx = Math.floor(unit.pos.wx);
       const startTy = Math.floor(unit.pos.wy);
       const path = this.astar.findPath(startTx, startTy, goal.tx, goal.ty, this.navGrid);
       if (path.length > 0) {
         unit.path = path;
         unit.pathIndex = 0;
-        unit.state = UnitStateId.Moving;
+        unit.state = 'moving';
         unit.targetPos = { wx: goal.tx + 0.5, wy: goal.ty + 0.5 };
       }
     });
@@ -164,8 +159,7 @@ export class UnitManager {
 }
 
 /**
- * Returns N distinct passable tiles around (cx, cy) in a spiral pattern,
- * one per unit, so they don't all converge on the same tile.
+ * Returns N distinct passable tiles around (cx, cy) in a spiral pattern.
  */
 function formationTiles(
   cx: number, cy: number, count: number, nav: NavGrid
@@ -175,7 +169,6 @@ function formationTiles(
 
   const key = (tx: number, ty: number) => ty * 10000 + tx;
 
-  // Spiral outward: ring 0 = center, ring 1 = adjacent, etc.
   for (let ring = 0; results.length < count; ring++) {
     if (ring === 0) {
       if (nav.isPassable(cx, cy)) {
@@ -184,7 +177,6 @@ function formationTiles(
       }
       continue;
     }
-    // Walk the perimeter of the square at distance `ring`
     const candidates: { tx: number; ty: number }[] = [];
     for (let i = -ring; i <= ring; i++) {
       candidates.push({ tx: cx + i, ty: cy - ring });
@@ -194,7 +186,6 @@ function formationTiles(
       candidates.push({ tx: cx - ring, ty: cy + i });
       candidates.push({ tx: cx + ring, ty: cy + i });
     }
-    // Sort by distance to center for natural clustering
     candidates.sort((a, b) =>
       (Math.abs(a.tx - cx) + Math.abs(a.ty - cy)) -
       (Math.abs(b.tx - cx) + Math.abs(b.ty - cy))
@@ -207,7 +198,6 @@ function formationTiles(
         used.add(k);
       }
     }
-    // Safety: stop if ring gets absurdly large
     if (ring > 20) break;
   }
 

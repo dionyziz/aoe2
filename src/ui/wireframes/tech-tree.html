@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Tree — Age of Web</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+button { background: none; border: none; font: inherit; color: inherit; cursor: pointer; }
+
+:root {
+  --color-bg-darkest:          #0e0a04;
+  --color-panel-bg:            rgba(10, 6, 2, 0.98);
+  --color-panel-border:        #5a4020;
+  --color-panel-border-bright: #8a6030;
+  --color-panel-inner:         rgba(40, 28, 10, 0.60);
+  --color-text-primary:   #e8d890;
+  --color-text-secondary: #b09060;
+  --color-text-muted:     #706040;
+  --color-gold:       #d4aa20;
+  --color-gold-light: #f0cc40;
+  --color-gold-dim:   #8a6e14;
+  --font-ui:   Georgia, 'Times New Roman', serif;
+  --font-body: Georgia, 'Times New Roman', serif;
+  --text-xs: 10px; --text-sm: 12px; --text-md: 14px;
+  --text-lg: 17px; --text-xl: 22px;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px;
+  --sp-4: 16px; --sp-5: 24px;
+  --radius-sm: 3px; --radius-md: 6px; --radius-lg: 10px;
+  --shadow-panel: 0 4px 20px rgba(0,0,0,0.8);
+  --glow-gold: 0 0 10px rgba(212,170,32,0.45);
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: #000;
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  user-select: none;
+}
+
+/* ── Full-screen overlay ── */
+#tech-tree-overlay {
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.94);
+  overflow-y: auto;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gold-dim) transparent;
+  padding: var(--sp-4);
+}
+
+/* ── Header ── */
+.tt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--sp-4);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--color-panel-border-bright);
+  position: sticky;
+  top: 0;
+  background: rgba(0,0,0,0.90);
+  z-index: 10;
+}
+
+.tt-title {
+  font-family: var(--font-ui);
+  font-size: var(--text-xl);
+  color: var(--color-gold-light);
+  letter-spacing: 0.08em;
+}
+
+.tt-legend {
+  display: flex;
+  gap: var(--sp-4);
+  font-size: var(--text-xs);
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-swatch {
+  width: 28px; height: 18px;
+  border-radius: 3px;
+}
+.legend-swatch.researched { background: rgba(48,80,28,0.70); border: 1px solid #48c840; }
+.legend-swatch.available  { background: rgba(40,28,10,0.70); border: 1px solid #8a6e14; }
+.legend-swatch.locked     { background: rgba(40,28,10,0.40); border: 1px solid #5a4020; opacity: 0.5; }
+
+.tt-close {
+  padding: var(--sp-1) var(--sp-3);
+  background: var(--color-panel-inner);
+  border: 1px solid var(--color-panel-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: border-color 0.1s, color 0.1s;
+  min-width: 80px;
+  text-align: center;
+}
+.tt-close:hover { border-color: var(--color-gold); color: var(--color-gold-light); }
+
+/* ── Main grid ── */
+.tt-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(5, 1fr);
+  gap: var(--sp-3);
+  min-width: 900px;
+}
+
+/* Age label column */
+.age-label-cell {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-top: 6px;
+  padding-right: var(--sp-2);
+  border-right: 2px solid var(--color-panel-border);
+}
+
+.age-label {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--color-gold);
+  letter-spacing: 0.06em;
+  text-align: right;
+  writing-mode: horizontal-tb;
+}
+
+/* Building column */
+.tt-column {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tt-col-header {
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  color: var(--color-gold);
+  border-bottom: 1px solid var(--color-panel-border-bright);
+  padding-bottom: var(--sp-1);
+  margin-bottom: var(--sp-1);
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+/* Age row container within a column */
+.tt-age-section {
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--sp-1);
+  background: rgba(255,255,255,0.02);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(90,64,32,0.20);
+}
+
+/* Tech button */
+.tech-btn {
+  display: block;
+  width: 100%;
+  padding: 4px var(--sp-2);
+  font-size: var(--text-xs);
+  font-family: var(--font-body);
+  background: var(--color-panel-inner);
+  border: 1px solid var(--color-panel-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.1s, color 0.1s;
+  line-height: 1.4;
+  min-height: 26px;
+}
+
+.tech-btn:hover:not(.locked) {
+  border-color: var(--color-gold-dim);
+  color: var(--color-gold-light);
+}
+
+.tech-btn.researched {
+  background: rgba(48, 80, 28, 0.70);
+  border-color: #48c840;
+  color: #90d870;
+}
+.tech-btn.researched::after { content: ' ✓'; }
+
+.tech-btn.available {
+  border-color: var(--color-gold-dim);
+}
+
+.tech-btn.locked {
+  opacity: 0.38;
+  cursor: not-allowed;
+  color: var(--color-text-muted);
+}
+
+.tech-empty {
+  height: 28px; /* spacer to keep row heights aligned */
+}
+
+/* Prereq arrow hint */
+.prereq-arrow {
+  font-size: 8px;
+  color: var(--color-text-muted);
+  padding-left: var(--sp-2);
+}
+</style>
+</head>
+<body>
+
+<div id="tech-tree-overlay">
+
+  <!-- Header -->
+  <div class="tt-header">
+    <h1 class="tt-title">Technology Tree</h1>
+    <div class="tt-legend">
+      <div class="legend-item"><div class="legend-swatch researched"></div><span>Researched</span></div>
+      <div class="legend-item"><div class="legend-swatch available"></div><span>Available</span></div>
+      <div class="legend-item"><div class="legend-swatch locked"></div><span>Locked / Wrong Age</span></div>
+    </div>
+    <button class="tt-close" onclick="alert('Close tech tree (Y or Escape)')">✕ Close</button>
+  </div>
+
+  <!--
+    Grid layout: 6 columns
+      [0] = age labels
+      [1] = Blacksmith
+      [2] = Barracks
+      [3] = Archery Range
+      [4] = Stable
+      [5] = University
+    4 rows = Dark Age, Feudal Age, Castle Age, Imperial Age
+  -->
+
+  <!-- Column headers row -->
+  <div class="tt-grid" style="margin-bottom:0">
+    <div></div><!-- empty corner -->
+    <div class="tt-col-header">Blacksmith</div>
+    <div class="tt-col-header">Barracks</div>
+    <div class="tt-col-header">Archery Range</div>
+    <div class="tt-col-header">Stable</div>
+    <div class="tt-col-header">University</div>
+  </div>
+
+  <!-- DARK AGE ROW -->
+  <div class="tt-grid" style="margin-top:var(--sp-2)">
+    <div class="age-label-cell">
+      <div class="age-label">Dark Age</div>
+    </div>
+
+    <!-- Blacksmith: unavailable in Dark Age -->
+    <div class="tt-age-section">
+      <span class="tech-empty"></span>
+      <small class="prereq-arrow">Available Feudal+</small>
+    </div>
+
+    <!-- Barracks: available in Dark Age -->
+    <div class="tt-age-section">
+      <button class="tech-btn researched" title="Militia → Man-at-Arms (Feudal req)">Militia available</button>
+      <span class="tech-empty"></span>
+    </div>
+
+    <!-- Archery Range: unavailable in Dark Age -->
+    <div class="tt-age-section">
+      <span class="tech-empty"></span>
+      <small class="prereq-arrow">Available Feudal+</small>
+    </div>
+
+    <!-- Stable: unavailable in Dark Age -->
+    <div class="tt-age-section">
+      <span class="tech-empty"></span>
+      <small class="prereq-arrow">Available Feudal+</small>
+    </div>
+
+    <!-- University: unavailable until Castle Age -->
+    <div class="tt-age-section">
+      <span class="tech-empty"></span>
+      <small class="prereq-arrow">Available Castle+</small>
+    </div>
+  </div>
+
+  <!-- FEUDAL AGE ROW -->
+  <div class="tt-grid" style="margin-top:var(--sp-2)">
+    <div class="age-label-cell">
+      <div class="age-label">Feudal Age</div>
+    </div>
+
+    <!-- Blacksmith (attack upgrades) -->
+    <div class="tt-age-section">
+      <button class="tech-btn researched" title="150f — +1 melee attack (infantry, cavalry)">Forging</button>
+      <button class="tech-btn researched" title="100f — +1 pierce attack + range (archers)">Fletching</button>
+      <button class="tech-btn available"  title="100f — +1/+1 infantry armor">Scale Mail Armor</button>
+      <button class="tech-btn available"  title="150f — +1/+1 cavalry armor">Scale Barding Armor</button>
+      <button class="tech-btn available"  title="100f — +1/+1 archer armor">Padded Archer Armor</button>
+    </div>
+
+    <!-- Barracks (unit upgrades) -->
+    <div class="tt-age-section">
+      <button class="tech-btn available"  title="100f 40g, 40s — Militia → Man-at-Arms">Man-at-Arms</button>
+      <button class="tech-btn available"  title="300f, 45s — Spearman → Pikeman">Pikeman</button>
+      <button class="tech-btn available"  title="150f, 35s — Infantry cost −15 food">Supplies</button>
+    </div>
+
+    <!-- Archery Range -->
+    <div class="tt-age-section">
+      <button class="tech-btn available"  title="125f 75g, 35s — Archer → Crossbowman">Crossbowman</button>
+      <button class="tech-btn available"  title="200f, 35s — Skirmisher → Elite Skirmisher">Elite Skirmisher</button>
+      <button class="tech-btn locked"     title="Requires Castle Age">Heavy Cav. Archer</button>
+    </div>
+
+    <!-- Stable -->
+    <div class="tt-age-section">
+      <button class="tech-btn available"  title="150f, 45s — Scout → Light Cavalry">Light Cavalry</button>
+      <button class="tech-btn available"  title="200f 150g, 40s — All cavalry +20 HP">Bloodlines</button>
+      <button class="tech-btn available"  title="150f, 40s — All cavalry +10% speed">Husbandry</button>
+    </div>
+
+    <!-- University: unavailable -->
+    <div class="tt-age-section">
+      <span class="tech-empty"></span>
+      <small class="prereq-arrow">Available Castle+</small>
+    </div>
+  </div>
+
+  <!-- CASTLE AGE ROW -->
+  <div class="tt-grid" style="margin-top:var(--sp-2)">
+    <div class="age-label-cell">
+      <div class="age-label">Castle Age</div>
+    </div>
+
+    <!-- Blacksmith -->
+    <div class="tt-age-section">
+      <button class="tech-btn available"  title="220f — +1 melee attack (Iron Casting, req Forging)">Iron Casting</button>
+      <button class="tech-btn available"  title="200f — +1 pierce attack + range (Bodkin Arrow, req Fletching)">Bodkin Arrow</button>
+      <button class="tech-btn available"  title="200f 100g — +1/+1 infantry armor (Chain Mail, req Scale Mail)">Chain Mail Armor</button>
+      <button class="tech-btn available"  title="250f 250g — +1/+1 cavalry armor (Chain Barding, req Scale Barding)">Chain Barding Armor</button>
+      <button class="tech-btn available"  title="150f 150g — +1/+1 archer armor (Leather, req Padded)">Leather Archer Armor</button>
+    </div>
+
+    <!-- Barracks -->
+    <div class="tt-age-section">
+      <button class="tech-btn locked"     title="Requires Man-at-Arms first">Long Swordsman</button>
+      <button class="tech-btn locked"     title="Requires Pikeman first">Halberdier</button>
+      <button class="tech-btn available"  title="200f, 35s — Infantry +10% speed">Squires</button>
+      <button class="tech-btn available"  title="150f 50g, 30s — Infantry +2 attack vs buildings">Arson</button>
+      <button class="tech-btn available"  title="200g, 25s — Infantry +1 pierce armor">Gambesons</button>
+    </div>
+
+    <!-- Archery Range -->
+    <div class="tt-age-section">
+      <button class="tech-btn available"  title="300f 250g, 45s — Cavalry Archer → Heavy Cavalry Archer">Heavy Cav. Archer</button>
+      <button class="tech-btn available"  title="300f 250g, 45s — Archers instant reload">Thumb Ring</button>
+      <button class="tech-btn available"  title="200f 250g, 45s — Cavalry Archers +2/+2 armor">Parthian Tactics</button>
+    </div>
+
+    <!-- Stable -->
+    <div class="tt-age-section">
+      <button class="tech-btn available"  title="400f 300g, 60s — Knight → Cavalier">Cavalier</button>
+      <button class="tech-btn available"  title="150f 75g, 45s — Camel → Heavy Camel">Heavy Camel</button>
+      <button class="tech-btn locked"     title="Requires Imperial Age">Hussar</button>
+    </div>
+
+    <!-- University -->
+    <div class="tt-age-section">
+      <button class="tech-btn available"  title="175f 50w — +3 building armor, +10% HP">Masonry</button>
+      <button class="tech-btn available"  title="300g — Projectiles track moving targets">Ballistics</button>
+      <button class="tech-btn available"  title="250w 200g — Siege +1 range, +20% damage vs walls">Siege Engineers</button>
+      <button class="tech-btn available"  title="200g — Towers/Castle attack adjacent (no blind spot)">Murder Holes</button>
+      <button class="tech-btn available"  title="300f 200w — +20% construction speed">Treadmill Crane</button>
+      <button class="tech-btn available"  title="150g — Watch Tower → Guard Tower upgrade">Guard Tower</button>
+    </div>
+  </div>
+
+  <!-- IMPERIAL AGE ROW -->
+  <div class="tt-grid" style="margin-top:var(--sp-2)">
+    <div class="age-label-cell">
+      <div class="age-label">Imperial Age</div>
+    </div>
+
+    <!-- Blacksmith -->
+    <div class="tt-age-section">
+      <button class="tech-btn locked"     title="Requires Iron Casting">Blast Furnace</button>
+      <button class="tech-btn locked"     title="Requires Bodkin Arrow">Bracer</button>
+      <button class="tech-btn locked"     title="Requires Chain Mail Armor">Plate Mail Armor</button>
+      <button class="tech-btn locked"     title="Requires Chain Barding Armor">Plate Barding Armor</button>
+      <button class="tech-btn locked"     title="Requires Leather Archer Armor">Ring Archer Armor</button>
+    </div>
+
+    <!-- Barracks -->
+    <div class="tt-age-section">
+      <button class="tech-btn locked"     title="Requires Long Swordsman">Two-Handed Swordsman</button>
+      <button class="tech-btn locked"     title="Requires Two-Handed Swordsman">Champion</button>
+      <button class="tech-btn locked"     title="Requires Pikeman">Halberdier</button>
+    </div>
+
+    <!-- Archery Range -->
+    <div class="tt-age-section">
+      <button class="tech-btn locked"     title="Requires Crossbowman">Arbalester</button>
+    </div>
+
+    <!-- Stable -->
+    <div class="tt-age-section">
+      <button class="tech-btn locked"     title="Requires Light Cavalry">Hussar</button>
+      <button class="tech-btn locked"     title="Requires Cavalier">Paladin</button>
+    </div>
+
+    <!-- University -->
+    <div class="tt-age-section">
+      <button class="tech-btn locked"     title="Requires Masonry">Architecture</button>
+      <button class="tech-btn locked"     title="Requires Chemistry">Bombard Tower</button>
+      <button class="tech-btn locked"     title="300g — Enables Bombard Cannon/Tower">Chemistry</button>
+      <button class="tech-btn locked"     title="350f 100g — Towers +2 attack vs ships">Heated Shot</button>
+      <button class="tech-btn locked"     title="400f — Castle +3 range">Hoardings</button>
+      <button class="tech-btn locked"     title="Requires Guard Tower">Keep</button>
+    </div>
+  </div>
+
+</div><!-- /#tech-tree-overlay -->
+
+</body>
+</html>

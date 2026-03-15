@@ -1,250 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Main Menu — Age of Web</title>
-<style>
-/* ── Reset ── */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-button { background: none; border: none; font: inherit; color: inherit; cursor: pointer; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AoE Web — Main Menu Wireframe</title>
+  <link rel="stylesheet" href="../design-tokens.css">
+  <link rel="stylesheet" href="../menus.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Design tokens ── */
-:root {
-  --color-bg-darkest:          #0e0a04;
-  --color-panel-bg:            rgba(18, 12, 4, 0.94);
-  --color-panel-border:        #5a4020;
-  --color-panel-border-bright: #8a6030;
-  --color-panel-inner:         rgba(40, 28, 10, 0.70);
-  --color-text-primary:   #e8d890;
-  --color-text-secondary: #b09060;
-  --color-text-muted:     #706040;
-  --color-gold:       #d4aa20;
-  --color-gold-light: #f0cc40;
-  --color-gold-dim:   #8a6e14;
-  --font-ui:   Georgia, 'Times New Roman', serif;
-  --font-body: Georgia, 'Times New Roman', serif;
-  --font-mono: 'Courier New', monospace;
-  --text-xs:    10px;
-  --text-sm:    12px;
-  --text-md:    14px;
-  --text-lg:    17px;
-  --text-xl:    22px;
-  --text-2xl:   30px;
-  --text-title: 48px;
-  --sp-1: 4px;
-  --sp-2: 8px;
-  --sp-3: 12px;
-  --sp-4: 16px;
-  --sp-5: 24px;
-  --sp-6: 32px;
-  --radius-sm: 3px;
-  --radius-md: 6px;
-  --radius-lg: 12px;
-  --shadow-panel: 0 4px 20px rgba(0,0,0,0.8);
-  --glow-gold:    0 0 12px rgba(212,170,32,0.5);
-  --border-panel: 2px solid #5a4020;
-}
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Palatino Linotype', Georgia, serif;
+    }
 
-/* ── Full-screen background ── */
-body {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-  font-family: var(--font-body);
-  color: var(--color-text-primary);
-  user-select: none;
-}
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-/* Radial gradient — warm amber center fading to near-black */
-.menu-screen {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 40%,
-      rgba(80, 45, 10, 0.70) 0%,
-      rgba(45, 25, 8, 0.80) 35%,
-      rgba(14, 8, 4, 0.95) 65%,
-      #000 100%);
-}
+    /* Full-screen background */
+    .menu-screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at center, #2d1a08 0%, #0e0804 70%, #000 100%);
+      color: #e8d890;
+    }
 
-/* Subtle noise texture via SVG filter */
-.menu-screen::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(circle at 20% 80%, rgba(90,60,20,0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(90,60,20,0.06) 0%, transparent 50%);
-  pointer-events: none;
-}
+    /* Ambient particle-like texture */
+    .menu-screen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 30% 40%, rgba(80,40,0,0.15) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 300px at 70% 65%, rgba(60,25,0,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
 
-/* Decorative corner ornaments (CSS only) */
-.menu-screen::after {
-  content: '';
-  position: absolute;
-  inset: 24px;
-  border: 1px solid rgba(90, 64, 32, 0.25);
-  border-radius: 4px;
-  pointer-events: none;
-}
+    /* Card */
+    .menu-card {
+      position: relative;
+      background: rgba(18, 12, 4, 0.94);
+      border: 2px solid #8a6030;
+      border-radius: 12px;
+      padding: 32px 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 0 60px rgba(100,50,0,0.2);
+      min-width: 380px;
+      max-width: 440px;
+      width: 100%;
+      animation: fadeIn 0.35s ease both;
+    }
 
-/* ── Card ── */
-.menu-card {
-  position: relative;
-  background: var(--color-panel-bg);
-  border: 2px solid var(--color-panel-border-bright);
-  border-radius: var(--radius-lg);
-  padding: var(--sp-6) calc(var(--sp-6) * 1.25);
-  box-shadow: var(--shadow-panel), inset 0 1px 0 rgba(212,170,32,0.12);
-  min-width: 380px;
-  max-width: 90vw;
-  text-align: center;
-}
+    /* Decorative horizontal rule */
+    .deco-rule {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #8a6030 20%, #c8921a 50%, #8a6030 80%, transparent);
+      margin: 12px 0;
+    }
 
-/* ── Decorative rule ── */
-.deco-rule {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-3);
-  margin: var(--sp-4) 0;
-}
-.deco-rule-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-panel-border-bright), transparent);
-}
-.deco-rule-diamond {
-  width: 8px; height: 8px;
-  background: var(--color-gold-dim);
-  transform: rotate(45deg);
-  flex-shrink: 0;
-}
+    /* Title */
+    .game-title {
+      font-size: 52px;
+      color: #d4aa20;
+      text-align: center;
+      letter-spacing: 0.08em;
+      text-shadow:
+        0 0 12px rgba(212,170,32,0.5),
+        2px 3px 0 #000,
+        0 0 40px rgba(212,170,32,0.25);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
 
-/* ── Title ── */
-.game-title {
-  font-size: var(--text-title);
-  font-family: var(--font-ui);
-  color: var(--color-gold-light);
-  text-align: center;
-  letter-spacing: 0.10em;
-  text-shadow:
-    var(--glow-gold),
-    0 0 30px rgba(212,170,32,0.30),
-    0 3px 10px rgba(0,0,0,0.90);
-  margin-bottom: var(--sp-1);
-  line-height: 1.0;
-}
+    .game-subtitle {
+      font-size: 12px;
+      color: #706040;
+      text-align: center;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
 
-.game-subtitle {
-  font-size: var(--text-lg);
-  font-family: var(--font-body);
-  color: var(--color-text-secondary);
-  letter-spacing: 0.18em;
-  margin-bottom: 0;
-}
+    /* Button group */
+    .btn-group {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
 
-/* ── Buttons ── */
-.menu-btn {
-  display: block;
-  width: 100%;
-  padding: var(--sp-3) var(--sp-5);
-  margin-bottom: var(--sp-2);
-  background: var(--color-panel-inner);
-  border: 2px solid var(--color-panel-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-primary);
-  font-family: var(--font-ui);
-  font-size: var(--text-lg);
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  text-align: center;
-  transition: border-color 0.15s, box-shadow 0.15s, color 0.15s, background 0.15s;
-  min-height: 48px;
-}
+    .menu-btn {
+      display: block;
+      width: 100%;
+      padding: 12px 24px;
+      margin-bottom: 8px;
+      background: rgba(18, 12, 4, 0.94);
+      border: 2px solid #5a4020;
+      border-radius: 6px;
+      color: #e8d890;
+      font-family: 'Palatino Linotype', Georgia, serif;
+      font-size: 17px;
+      cursor: pointer;
+      text-align: center;
+      letter-spacing: 0.05em;
+      transition: border-color 0.15s, color 0.15s, box-shadow 0.15s;
+    }
 
-.menu-btn:hover {
-  border-color: var(--color-gold);
-  color: var(--color-gold-light);
-  box-shadow: var(--glow-gold);
-  background: rgba(60, 42, 14, 0.80);
-}
+    .menu-btn:hover {
+      border-color: #d4aa20;
+      color: #f8f0b0;
+      box-shadow: 0 0 12px rgba(212,170,32,0.5);
+    }
 
-.menu-btn:active {
-  background: rgba(212, 170, 32, 0.08);
-}
+    .menu-btn:active {
+      background: #1a1208;
+    }
 
-.menu-btn.primary {
-  border-color: var(--color-gold);
-  color: var(--color-gold);
-  font-size: var(--text-xl);
-  padding: var(--sp-4) var(--sp-5);
-  margin-bottom: var(--sp-3);
-}
+    .menu-btn.primary {
+      border-color: #d4aa20;
+      color: #d4aa20;
+      font-size: 22px;
+    }
 
-.menu-btn.primary:hover {
-  background: rgba(212,170,32,0.12);
-  box-shadow: var(--glow-gold), 0 0 30px rgba(212,170,32,0.25);
-  color: var(--color-gold-light);
-}
+    .menu-btn.primary:hover {
+      box-shadow: 0 0 18px rgba(212,170,32,0.6);
+      color: #f8f0b0;
+    }
 
-.menu-btn:last-child { margin-bottom: 0; }
-
-/* ── Version tag ── */
-.version-tag {
-  position: fixed;
-  bottom: var(--sp-3);
-  right: var(--sp-4);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  pointer-events: none;
-  letter-spacing: 0.04em;
-}
-</style>
+    /* Version label */
+    .version-label {
+      position: absolute;
+      bottom: 12px;
+      right: 16px;
+      font-size: 10px;
+      color: rgba(112, 96, 64, 0.6);
+      letter-spacing: 0.05em;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
 </head>
 <body>
 
-<div class="menu-screen">
-  <div class="menu-card">
+  <div class="menu-screen">
 
-    <!-- Title -->
-    <h1 class="game-title">AGE OF WEB</h1>
-    <p class="game-subtitle">A Browser-Based Strategy Game</p>
+    <div class="menu-card">
+      <hr class="deco-rule">
+      <h1 class="game-title">AGE OF WEB</h1>
+      <p class="game-subtitle">A Browser-Based Strategy Game</p>
+      <hr class="deco-rule">
 
-    <!-- Decorative divider -->
-    <div class="deco-rule">
-      <div class="deco-rule-line"></div>
-      <div class="deco-rule-diamond"></div>
-      <div class="deco-rule-line"></div>
+      <div class="btn-group">
+        <button class="menu-btn primary">Single Player</button>
+        <button class="menu-btn">Multiplayer</button>
+        <button class="menu-btn">Options</button>
+      </div>
     </div>
 
-    <!-- Navigation buttons -->
-    <button class="menu-btn primary" onclick="alert('→ Game Setup screen')">
-      Single Player
-    </button>
-    <button class="menu-btn" onclick="alert('→ Multiplayer Lobby (not yet implemented)')">
-      Multiplayer
-    </button>
-    <button class="menu-btn" onclick="alert('→ Options screen')">
-      Options
-    </button>
-
-    <!-- Bottom decorative rule -->
-    <div class="deco-rule" style="margin-bottom:0">
-      <div class="deco-rule-line"></div>
-      <div class="deco-rule-diamond"></div>
-      <div class="deco-rule-line"></div>
-    </div>
+    <div class="version-label">v0.1.0-dev</div>
 
   </div>
-</div>
-
-<div class="version-tag">v0.1.0-dev &middot; Age of Web Project</div>
 
 </body>
 </html>

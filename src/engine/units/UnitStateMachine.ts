@@ -1,5 +1,4 @@
-import type { UnitInstance } from '../../types/unit';
-import { UnitStateId } from '../../types/unit';
+import type { UnitInstance, UnitStateId } from '../../types/unit';
 
 export class UnitStateMachine {
   transition(unit: UnitInstance, newState: UnitStateId): void {

@@ -2,17 +2,17 @@ import { TILE_WIDTH, TILE_HEIGHT } from '../../constants';
 import { TerrainType } from '../../types/map';
 import type { MapData } from '../map/MapData';
 import type { Camera } from '../camera/Camera';
-import type { IsoProjection } from './IsoProjection';
+import { IsoProjection } from './IsoProjection';
 
 const TERRAIN_COLORS: Record<number, string> = {
-  [TerrainType.Grass]: '#4a7c3f',
-  [TerrainType.Dirt]: '#8B6914',
-  [TerrainType.Sand]: '#c2a24c',
-  [TerrainType.Water]: '#1a4a8c',
-  [TerrainType.ShallowWater]: '#4a7abc',
-  [TerrainType.Snow]: '#dce8ef',
-  [TerrainType.Forest]: '#1e5c1e',
-  [TerrainType.Rock]: '#6b6b6b',
+  [TerrainType.Grass]: '#5a8a3c',
+  [TerrainType.Dirt]: '#8b6914',
+  [TerrainType.Sand]: '#d4b483',
+  [TerrainType.Water]: '#2d6fa6',
+  [TerrainType.ShallowWater]: '#5090c0',
+  [TerrainType.Snow]: '#e8e8f0',
+  [TerrainType.Forest]: '#2d5a1e',
+  [TerrainType.Rock]: '#696969',
 };
 
 const TERRAIN_BORDER_COLORS: Record<number, string> = {
@@ -27,20 +27,27 @@ const TERRAIN_BORDER_COLORS: Record<number, string> = {
 };
 
 export class TerrainRenderer {
-  private mapData: MapData;
-  private iso: IsoProjection;
+  private mapData: MapData | null = null;
   private dirty = true;
 
-  constructor(mapData: MapData, iso: IsoProjection) {
+  constructor(
+    private ctx: CanvasRenderingContext2D,
+    private camera: Camera
+  ) {}
+
+  setMap(mapData: MapData): void {
     this.mapData = mapData;
-    this.iso = iso;
+    this.dirty = true;
   }
 
   invalidate(): void { this.dirty = true; }
 
-  render(ctx: CanvasRenderingContext2D, camera: Camera): void {
+  render(): void {
+    if (!this.mapData) return;
+
     const { width: mapW, height: mapH } = this.mapData;
-    const range = this.iso.visibleTileRange(camera.canvasWidth, camera.canvasHeight, camera, mapW, mapH);
+    const camera = this.camera;
+    const range = IsoProjection.visibleTileRange(camera, mapW, mapH);
 
     // Painter's order: render by diagonal d = tx + ty
     const minD = range.minTx + range.minTy;
@@ -57,7 +64,7 @@ export class TerrainRenderer {
         const tile = this.mapData.getTile(tx, ty);
         if (!tile) continue;
 
-        this.drawTile(ctx, tx, ty, tile.terrain, tile.elevation, camera);
+        this.drawTile(tx, ty, tile.terrain, tile.elevation);
       }
     }
 
@@ -65,15 +72,18 @@ export class TerrainRenderer {
   }
 
   private drawTile(
-    ctx: CanvasRenderingContext2D,
     tx: number, ty: number,
     terrain: TerrainType,
-    elevation: number,
-    camera: Camera
+    elevation: number
   ): void {
-    const center = this.iso.worldToScreen(tx + 0.5, ty + 0.5, elevation, camera);
+    const ctx = this.ctx;
+    const camera = this.camera;
+    const center = IsoProjection.worldToScreen(tx + 0.5, ty + 0.5, elevation, camera);
     const hw = (TILE_WIDTH / 2) * camera.zoom;
     const hh = (TILE_HEIGHT / 2) * camera.zoom;
+
+    // Slightly darker for higher elevation
+    const elevDarken = elevation * 0.08;
 
     ctx.beginPath();
     ctx.moveTo(center.x, center.y - hh);  // top
@@ -82,7 +92,8 @@ export class TerrainRenderer {
     ctx.lineTo(center.x - hw, center.y);  // left
     ctx.closePath();
 
-    ctx.fillStyle = TERRAIN_COLORS[terrain] ?? '#888';
+    const baseColor = TERRAIN_COLORS[terrain] ?? '#888';
+    ctx.fillStyle = elevDarken > 0 ? darkenHex(baseColor, elevDarken) : baseColor;
     ctx.fill();
 
     ctx.strokeStyle = TERRAIN_BORDER_COLORS[terrain] ?? '#666';
@@ -115,4 +126,13 @@ export class TerrainRenderer {
       ctx.stroke();
     }
   }
+}
+
+/** Darken a hex color by a fraction 0..1 */
+function darkenHex(hex: string, amount: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.max(0, Math.round(((n >> 16) & 0xff) * (1 - amount)));
+  const g = Math.max(0, Math.round(((n >> 8) & 0xff) * (1 - amount)));
+  const b = Math.max(0, Math.round((n & 0xff) * (1 - amount)));
+  return `rgb(${r},${g},${b})`;
 }

@@ -1,5 +1,5 @@
 import type { Camera } from '../camera/Camera';
-import type { IsoProjection } from '../renderer/IsoProjection';
+import type { IsoProjectionType } from '../renderer/IsoProjection';
 import type { BuildingManager } from './BuildingManager';
 import type { NavGrid } from '../pathfinding/NavGrid';
 import { BUILDING_MAP } from '../../data/buildings/index';
@@ -12,14 +12,14 @@ export class BuildingPlacementSystem {
   private previewTy = 0;
   private valid = false;
 
-  private iso: IsoProjection;
+  private iso: IsoProjectionType;
   private camera: Camera;
   private navGrid: NavGrid;
   private buildingManager: BuildingManager;
   private playerId: number;
   onPlaced?: (defId: string, tx: number, ty: number) => void;
 
-  constructor(iso: IsoProjection, camera: Camera, navGrid: NavGrid, buildingManager: BuildingManager, playerId: number) {
+  constructor(iso: IsoProjectionType, camera: Camera, navGrid: NavGrid, buildingManager: BuildingManager, playerId: number) {
     this.iso = iso;
     this.camera = camera;
     this.navGrid = navGrid;

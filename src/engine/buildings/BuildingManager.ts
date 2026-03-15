@@ -34,6 +34,10 @@ export class BuildingManager {
       currentHp: def.hp,
       maxHp: def.hp,
       constructionProgress: 1.0, // instantly built for now
+      trainQueue: [],
+      researchQueue: [],
+      garrisonedUnitIds: [],
+      isSelected: false,
       selected: false,
     };
 
@@ -60,13 +64,13 @@ export class BuildingManager {
   }
 
   selectAt(tx: number, ty: number): BuildingInstance | null {
-    for (const b of this.buildings) b.selected = false;
+    for (const b of this.buildings) { b.isSelected = false; b.selected = false; }
     const b = this.getAt(tx, ty);
-    if (b) b.selected = true;
+    if (b) { b.isSelected = true; b.selected = true; }
     return b;
   }
 
   clearSelection(): void {
-    for (const b of this.buildings) b.selected = false;
+    for (const b of this.buildings) { b.isSelected = false; b.selected = false; }
   }
 }

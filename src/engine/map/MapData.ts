@@ -1,4 +1,4 @@
-import type { TileData, MapData as MapDataType, ResourceNode } from '../../types/map';
+import type { TileData, MapData as MapDataType } from '../../types/map';
 import { TerrainType } from '../../types/map';
 import type { TileCoord } from '../../types/common';
 import { MapGenerator, DEFAULT_GEN_OPTIONS } from './MapGenerator';
@@ -9,7 +9,7 @@ export class MapData {
   readonly height: number;
   readonly name: string;
   readonly tiles: TileData[][];
-  readonly resources: ResourceNode[];
+  readonly resources: import('../../types/map').ResourceNode[];
   readonly playerStarts: TileCoord[];
 
   constructor(data: MapDataType) {
@@ -29,6 +29,10 @@ export class MapData {
   isPassable(tx: number, ty: number): boolean {
     const tile = this.getTile(tx, ty);
     return tile?.passable ?? false;
+  }
+
+  isInBounds(tx: number, ty: number): boolean {
+    return tx >= 0 && ty >= 0 && tx < this.width && ty < this.height;
   }
 
   getElevation(tx: number, ty: number): number {
@@ -84,3 +88,6 @@ export class MapData {
     });
   }
 }
+
+/** Alias used by the foundation-layer Game */
+export const MapDataStore = MapData;

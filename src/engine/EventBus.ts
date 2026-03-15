@@ -15,6 +15,8 @@ export type EventMap = {
   'unit:selected': { ids: number[] };
   'unit:died': { id: number };
   'unit:orderMove': { ids: number[]; target: WorldPos };
+  'building:placed': { defId: string; tx: number; ty: number };
+  'research:complete': { techId: string; playerId: number };
   'map:loaded': { map: MapData };
   'camera:moved': void;
 };

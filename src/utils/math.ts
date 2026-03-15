@@ -1,4 +1,4 @@
-import type { Vec2 } from '../types/common';
+import type { Vec2, WorldPos } from '../types/common';
 
 export function clamp(val: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, val));
@@ -8,9 +8,9 @@ export function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
 
-export function distance(a: Vec2, b: Vec2): number {
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
+export function distance(a: WorldPos, b: WorldPos): number {
+  const dx = b.wx - a.wx;
+  const dy = b.wy - a.wy;
   return Math.sqrt(dx * dx + dy * dy);
 }
 
@@ -30,6 +30,19 @@ export function vec2Normalize(v: Vec2): Vec2 {
   const len = Math.sqrt(v.x * v.x + v.y * v.y);
   if (len === 0) return { x: 0, y: 0 };
   return { x: v.x / len, y: v.y / len };
+}
+
+export function vec2Length(v: Vec2): number {
+  return Math.sqrt(v.x * v.x + v.y * v.y);
+}
+
+/** Octile distance for A* heuristic */
+export function octileDistance(dx: number, dy: number): number {
+  const D = 1;
+  const D2 = Math.SQRT2;
+  const minD = Math.min(dx, dy);
+  const maxD = Math.max(dx, dy);
+  return D * maxD + (D2 - D) * minD;
 }
 
 export function rectContains(rect: { x: number; y: number; width: number; height: number }, x: number, y: number): boolean {

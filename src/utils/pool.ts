@@ -1,13 +1,13 @@
-export class ObjectPool<T> {
+export class Pool<T> {
   private pool: T[] = [];
-  private create: () => T;
-  private reset: (obj: T) => void;
 
-  constructor(create: () => T, reset: (obj: T) => void, initialSize = 0) {
-    this.create = create;
-    this.reset = reset;
+  constructor(
+    private factory: () => T,
+    private reset: (obj: T) => void,
+    initialSize = 32
+  ) {
     for (let i = 0; i < initialSize; i++) {
-      this.pool.push(create());
+      this.pool.push(factory());
     }
   }
 
@@ -15,7 +15,7 @@ export class ObjectPool<T> {
     if (this.pool.length > 0) {
       return this.pool.pop()!;
     }
-    return this.create();
+    return this.factory();
   }
 
   release(obj: T): void {
@@ -25,5 +25,12 @@ export class ObjectPool<T> {
 
   get size(): number {
     return this.pool.length;
+  }
+}
+
+/** @deprecated Use Pool instead */
+export class ObjectPool<T> extends Pool<T> {
+  constructor(create: () => T, reset: (obj: T) => void, initialSize = 0) {
+    super(create, reset, initialSize);
   }
 }

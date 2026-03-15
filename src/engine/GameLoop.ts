@@ -4,22 +4,17 @@ type UpdateFn = (dt: number) => void;
 type RenderFn = (alpha: number) => void;
 
 export class GameLoop {
-  private updateFn: UpdateFn;
-  private renderFn: RenderFn;
+  private accumulator = 0;
+  private lastTime = 0;
   private running = false;
   private rafId = 0;
-  private lastTime = 0;
-  private accumulator = 0;
-
-  // FPS tracking
-  private frameCount = 0;
-  private fpsTimer = 0;
+  private fpsFrames: number[] = [];
   public fps = 0;
 
-  constructor(update: UpdateFn, render: RenderFn) {
-    this.updateFn = update;
-    this.renderFn = render;
-  }
+  constructor(
+    private update: UpdateFn,
+    private render: RenderFn,
+  ) {}
 
   start(): void {
     this.running = true;
@@ -35,26 +30,22 @@ export class GameLoop {
   private loop = (now: number): void => {
     if (!this.running) return;
 
-    const elapsed = Math.min(now - this.lastTime, 200); // cap at 200ms to avoid spiral
+    const elapsed = Math.min(now - this.lastTime, 200); // cap at 200ms to prevent spiral
     this.lastTime = now;
     this.accumulator += elapsed;
 
-    // Fixed-timestep updates
     while (this.accumulator >= TICK_MS) {
-      this.updateFn(TICK_MS);
+      this.update(TICK_MS / 1000);
       this.accumulator -= TICK_MS;
     }
 
-    const alpha = this.accumulator / TICK_MS;
-    this.renderFn(alpha);
+    this.render(this.accumulator / TICK_MS);
 
-    // FPS counter
-    this.frameCount++;
-    this.fpsTimer += elapsed;
-    if (this.fpsTimer >= 1000) {
-      this.fps = Math.round(this.frameCount * 1000 / this.fpsTimer);
-      this.frameCount = 0;
-      this.fpsTimer = 0;
+    // rolling FPS over last 60 frames
+    this.fpsFrames.push(now);
+    if (this.fpsFrames.length > 60) this.fpsFrames.shift();
+    if (this.fpsFrames.length > 1) {
+      this.fps = Math.round((this.fpsFrames.length - 1) / ((now - this.fpsFrames[0]) / 1000));
     }
 
     this.rafId = requestAnimationFrame(this.loop);

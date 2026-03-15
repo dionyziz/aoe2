@@ -1,12 +1,8 @@
 import type { UnitInstance } from '../../types/unit';
-import { UnitStateId } from '../../types/unit';
-import { UNIT_MAP } from '../../data/units/index';
 
 let nextId = 1;
 
 export function createUnit(defId: string, playerId: number, wx: number, wy: number): UnitInstance {
-  const def = UNIT_MAP.get(defId);
-  const hp = def?.hp ?? 40;
   return {
     id: nextId++,
     defId,
@@ -15,13 +11,16 @@ export function createUnit(defId: string, playerId: number, wx: number, wy: numb
     targetPos: null,
     path: [],
     pathIndex: 0,
-    state: UnitStateId.Idle,
-    currentHp: hp,
+    state: 'idle',
+    currentHp: 40,
     direction: 0,
     animFrame: 0,
     animTimer: 0,
     selected: false,
-    targetUnitId: null
+    targetUnitId: null,
+    targetBuildingId: null,
+    stance: 'aggressive',
+    garrisonedIn: null,
   };
 }
 

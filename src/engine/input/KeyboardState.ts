@@ -1,5 +1,5 @@
 export class KeyboardState {
-  private keys = new Set<string>();
+  private held = new Set<string>();
 
   constructor() {
     window.addEventListener('keydown', this.onKeyDown);
@@ -7,16 +7,16 @@ export class KeyboardState {
   }
 
   private onKeyDown = (e: KeyboardEvent): void => {
-    this.keys.add(e.code);
+    this.held.add(e.code);
   };
 
   private onKeyUp = (e: KeyboardEvent): void => {
-    this.keys.delete(e.code);
+    this.held.delete(e.code);
   };
 
-  isDown(code: string): boolean {
-    return this.keys.has(code);
-  }
+  press(code: string): void { this.held.add(code); }
+  release(code: string): void { this.held.delete(code); }
+  isDown(code: string): boolean { return this.held.has(code); }
 
   destroy(): void {
     window.removeEventListener('keydown', this.onKeyDown);

@@ -16,6 +16,11 @@ export class Camera {
     this.mapHeight = h;
   }
 
+  setCanvasSize(w: number, h: number): void {
+    this.canvasWidth = w;
+    this.canvasHeight = h;
+  }
+
   pan(dx: number, dy: number): void {
     this.offsetX += dx;
     this.offsetY += dy;
@@ -29,10 +34,14 @@ export class Camera {
     this.zoom = newZoom;
   }
 
+  /** Center camera on world position (wx, wy) */
+  centerOn(wx: number, wy: number): void {
+    this.offsetX = this.canvasWidth / 2 - (wx - wy) * (TILE_WIDTH / 2) * this.zoom;
+    this.offsetY = this.canvasHeight / 2 - (wx + wy) * (TILE_HEIGHT / 2) * this.zoom;
+  }
+
+  /** Center camera on tile (tx, ty) — alias */
   centerOnTile(tx: number, ty: number): void {
-    const sx = (tx - ty) * (TILE_WIDTH / 2);
-    const sy = (tx + ty) * (TILE_HEIGHT / 2);
-    this.offsetX = this.canvasWidth / 2 - sx * this.zoom;
-    this.offsetY = this.canvasHeight / 2 - sy * this.zoom;
+    this.centerOn(tx + 0.5, ty + 0.5);
   }
 }

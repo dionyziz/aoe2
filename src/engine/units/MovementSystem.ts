@@ -1,14 +1,13 @@
 import type { UnitInstance } from '../../types/unit';
-import { UnitStateId } from '../../types/unit';
 import { worldToDirection } from './Unit';
 
 const UNIT_SPEED = 0.003; // tiles per ms
 
 export class MovementSystem {
   update(unit: UnitInstance, dt: number): void {
-    if (unit.state !== UnitStateId.Moving) return;
+    if (unit.state !== 'moving') return;
     if (unit.path.length === 0 || unit.pathIndex >= unit.path.length) {
-      unit.state = UnitStateId.Idle;
+      unit.state = 'idle';
       unit.targetPos = null;
       return;
     }
@@ -30,7 +29,7 @@ export class MovementSystem {
       unit.pos.wy = targetWy;
       unit.pathIndex++;
       if (unit.pathIndex >= unit.path.length) {
-        unit.state = UnitStateId.Idle;
+        unit.state = 'idle';
         unit.path = [];
         unit.pathIndex = 0;
         unit.targetPos = null;

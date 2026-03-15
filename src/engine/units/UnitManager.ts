@@ -56,6 +56,7 @@ export class UnitManager {
     for (const unit of this.units) {
       this.movementSystem.update(unit, dt);
     }
+    this.animSystem.update(dt, this.units);
   }
 
   private handleLeftClick(screenX: number, screenY: number): void {

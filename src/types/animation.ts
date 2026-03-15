@@ -4,6 +4,7 @@ export interface SpriteFrame {
 }
 
 export interface AnimationDef {
+  id: string;
   directions: number;
   fps: number;
   loop: boolean;
@@ -12,8 +13,8 @@ export interface AnimationDef {
 }
 
 export interface AnimationRef {
-  defId: string;
-  direction: number;
-  frame: number;
+  animId: string;
+  dirIndex: number;
+  frameIndex: number;
   timer: number;
 }

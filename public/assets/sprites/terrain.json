@@ -1,13 +1,13 @@
 {
   "frames": {
-    "terrain_grass":        {"frame":{"x":0,  "y":0,"w":64,"h":40},"anchor":{"x":32,"y":32}},
-    "terrain_dirt":         {"frame":{"x":64, "y":0,"w":64,"h":40},"anchor":{"x":32,"y":32}},
-    "terrain_sand":         {"frame":{"x":128,"y":0,"w":64,"h":40},"anchor":{"x":32,"y":32}},
-    "terrain_water":        {"frame":{"x":192,"y":0,"w":64,"h":40},"anchor":{"x":32,"y":32}},
-    "terrain_shallow_water":{"frame":{"x":256,"y":0,"w":64,"h":40},"anchor":{"x":32,"y":32}},
-    "terrain_snow":         {"frame":{"x":320,"y":0,"w":64,"h":40},"anchor":{"x":32,"y":32}},
-    "terrain_forest":       {"frame":{"x":384,"y":0,"w":64,"h":40},"anchor":{"x":32,"y":32}},
-    "terrain_rock":         {"frame":{"x":448,"y":0,"w":64,"h":40},"anchor":{"x":32,"y":32}}
+    "terrain_grass":        { "frame": { "x":   0, "y": 0, "w": 64, "h": 40 }, "anchor": { "x": 32, "y": 40 } },
+    "terrain_dirt":         { "frame": { "x":  64, "y": 0, "w": 64, "h": 40 }, "anchor": { "x": 32, "y": 40 } },
+    "terrain_sand":         { "frame": { "x": 128, "y": 0, "w": 64, "h": 40 }, "anchor": { "x": 32, "y": 40 } },
+    "terrain_water":        { "frame": { "x": 192, "y": 0, "w": 64, "h": 40 }, "anchor": { "x": 32, "y": 40 } },
+    "terrain_shallow_water":{ "frame": { "x": 256, "y": 0, "w": 64, "h": 40 }, "anchor": { "x": 32, "y": 40 } },
+    "terrain_snow":         { "frame": { "x": 320, "y": 0, "w": 64, "h": 40 }, "anchor": { "x": 32, "y": 40 } },
+    "terrain_forest":       { "frame": { "x": 384, "y": 0, "w": 64, "h": 40 }, "anchor": { "x": 32, "y": 40 } },
+    "terrain_rock":         { "frame": { "x": 448, "y": 0, "w": 64, "h": 40 }, "anchor": { "x": 32, "y": 40 } }
   },
   "animations": {}
 }

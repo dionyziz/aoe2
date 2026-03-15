@@ -41,8 +41,7 @@ export class EventBus {
   }
 
   emit<K extends keyof EventMap>(event: K, data: EventMap[K]): void {
-    const handlers = this.listeners.get(event);
-    if (!handlers) return;
-    for (const h of handlers) h(data as unknown);
+    const handlers = [...(this.listeners.get(event) ?? [])];
+    for (const h of handlers) { h(data as unknown); }
   }
 }

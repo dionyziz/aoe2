@@ -12,13 +12,14 @@ export class InputManager {
   private camera: Camera;
   private middleDragLastX = 0;
   private middleDragLastY = 0;
+  private onContextMenu = (e: Event): void => { e.preventDefault(); };
 
   constructor(canvas: HTMLCanvasElement, camera: Camera, eventBus: EventBus) {
     this.canvas = canvas;
     this.eventBus = eventBus;
     this.camera = camera;
 
-    canvas.addEventListener('contextmenu', e => e.preventDefault());
+    canvas.addEventListener('contextmenu', this.onContextMenu);
     canvas.addEventListener('mousedown', this.onMouseDown);
     canvas.addEventListener('mousemove', this.onMouseMove);
     canvas.addEventListener('mouseup', this.onMouseUp);
@@ -116,7 +117,7 @@ export class InputManager {
   };
 
   destroy(): void {
-    this.canvas.removeEventListener('contextmenu', e => e.preventDefault());
+    this.canvas.removeEventListener('contextmenu', this.onContextMenu);
     this.canvas.removeEventListener('mousedown', this.onMouseDown);
     this.canvas.removeEventListener('mousemove', this.onMouseMove);
     this.canvas.removeEventListener('mouseup', this.onMouseUp);

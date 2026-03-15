@@ -29,6 +29,8 @@ const TERRAIN_BORDER_COLORS: Record<number, string> = {
 export class TerrainRenderer {
   private mapData: MapData | null = null;
   private dirty = true;
+  private offscreen: HTMLCanvasElement | null = null;
+  private offCtx: CanvasRenderingContext2D | null = null;
 
   constructor(
     private ctx: CanvasRenderingContext2D,
@@ -44,6 +46,36 @@ export class TerrainRenderer {
 
   render(): void {
     if (!this.mapData) return;
+
+    const { canvasWidth, canvasHeight } = this.camera;
+
+    // Ensure offscreen canvas matches current viewport dimensions
+    if (
+      !this.offscreen ||
+      this.offscreen.width !== Math.ceil(canvasWidth) ||
+      this.offscreen.height !== Math.ceil(canvasHeight)
+    ) {
+      this.offscreen = document.createElement('canvas');
+      this.offscreen.width = Math.ceil(canvasWidth);
+      this.offscreen.height = Math.ceil(canvasHeight);
+      this.offCtx = this.offscreen.getContext('2d')!;
+      this.dirty = true;
+    }
+
+    if (this.dirty) {
+      this.redrawOffscreen();
+      this.dirty = false;
+    }
+
+    // Blit offscreen cache to main canvas
+    this.ctx.drawImage(this.offscreen, 0, 0);
+  }
+
+  private redrawOffscreen(): void {
+    if (!this.mapData || !this.offCtx || !this.offscreen) return;
+
+    const offCtx = this.offCtx;
+    offCtx.clearRect(0, 0, this.offscreen.width, this.offscreen.height);
 
     const { width: mapW, height: mapH } = this.mapData;
     const camera = this.camera;
@@ -64,19 +96,17 @@ export class TerrainRenderer {
         const tile = this.mapData.getTile(tx, ty);
         if (!tile) continue;
 
-        this.drawTile(tx, ty, tile.terrain, tile.elevation);
+        this.drawTile(offCtx, tx, ty, tile.terrain, tile.elevation);
       }
     }
-
-    this.dirty = false;
   }
 
   private drawTile(
+    ctx: CanvasRenderingContext2D,
     tx: number, ty: number,
     terrain: TerrainType,
     elevation: number
   ): void {
-    const ctx = this.ctx;
     const camera = this.camera;
     const center = IsoProjection.worldToScreen(tx + 0.5, ty + 0.5, elevation, camera);
     const hw = (TILE_WIDTH / 2) * camera.zoom;

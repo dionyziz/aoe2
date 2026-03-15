@@ -27,10 +27,11 @@ export class Game {
     this.eventBus = new EventBus();
     this.camera = new Camera();
 
-    // Set canvas size with DPR accounting
-    const dpr = window.devicePixelRatio || 1;
-    const logicalW = canvas.width / dpr;
-    const logicalH = canvas.height / dpr;
+    // Camera needs logical (CSS) pixel dimensions, not physical pixel dimensions.
+    // canvas.style.width/height hold the logical size set in main.ts; fall back
+    // to window dimensions if the style strings are not yet populated.
+    const logicalW = parseFloat(canvas.style.width) || window.innerWidth;
+    const logicalH = parseFloat(canvas.style.height) || window.innerHeight;
     this.camera.setCanvasSize(logicalW, logicalH);
 
     this.cameraController = new CameraController(this.camera, this.eventBus);

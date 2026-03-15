@@ -8,11 +8,12 @@ export class InputManager {
     camera;
     middleDragLastX = 0;
     middleDragLastY = 0;
+    onContextMenu = (e) => { e.preventDefault(); };
     constructor(canvas, camera, eventBus) {
         this.canvas = canvas;
         this.eventBus = eventBus;
         this.camera = camera;
-        canvas.addEventListener('contextmenu', e => e.preventDefault());
+        canvas.addEventListener('contextmenu', this.onContextMenu);
         canvas.addEventListener('mousedown', this.onMouseDown);
         canvas.addEventListener('mousemove', this.onMouseMove);
         canvas.addEventListener('mouseup', this.onMouseUp);
@@ -103,7 +104,7 @@ export class InputManager {
         this.eventBus.emit('input:keyup', { code: e.code });
     };
     destroy() {
-        this.canvas.removeEventListener('contextmenu', e => e.preventDefault());
+        this.canvas.removeEventListener('contextmenu', this.onContextMenu);
         this.canvas.removeEventListener('mousedown', this.onMouseDown);
         this.canvas.removeEventListener('mousemove', this.onMouseMove);
         this.canvas.removeEventListener('mouseup', this.onMouseUp);

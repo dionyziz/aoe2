@@ -39,7 +39,7 @@ export interface UnitInstance {
   pathIndex: number;
   state: UnitStateId;
   currentHp: number;
-  direction: number; // 0-7, 0=south clockwise
+  direction: number; // 0-7, 0=SE, 1=S, 2=SW, 3=W, 4=NW, 5=N, 6=NE, 7=E (clockwise from SE)
   animFrame: number;
   animTimer: number;
   selected: boolean;

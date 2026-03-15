@@ -26,6 +26,8 @@ export class TerrainRenderer {
     camera;
     mapData = null;
     dirty = true;
+    offscreen = null;
+    offCtx = null;
     constructor(ctx, camera) {
         this.ctx = ctx;
         this.camera = camera;
@@ -38,6 +40,29 @@ export class TerrainRenderer {
     render() {
         if (!this.mapData)
             return;
+        const { canvasWidth, canvasHeight } = this.camera;
+        // Ensure offscreen canvas matches current viewport dimensions
+        if (!this.offscreen ||
+            this.offscreen.width !== Math.ceil(canvasWidth) ||
+            this.offscreen.height !== Math.ceil(canvasHeight)) {
+            this.offscreen = document.createElement('canvas');
+            this.offscreen.width = Math.ceil(canvasWidth);
+            this.offscreen.height = Math.ceil(canvasHeight);
+            this.offCtx = this.offscreen.getContext('2d');
+            this.dirty = true;
+        }
+        if (this.dirty) {
+            this.redrawOffscreen();
+            this.dirty = false;
+        }
+        // Blit offscreen cache to main canvas
+        this.ctx.drawImage(this.offscreen, 0, 0);
+    }
+    redrawOffscreen() {
+        if (!this.mapData || !this.offCtx || !this.offscreen)
+            return;
+        const offCtx = this.offCtx;
+        offCtx.clearRect(0, 0, this.offscreen.width, this.offscreen.height);
         const { width: mapW, height: mapH } = this.mapData;
         const camera = this.camera;
         const range = IsoProjection.visibleTileRange(camera, mapW, mapH);
@@ -54,13 +79,11 @@ export class TerrainRenderer {
                 const tile = this.mapData.getTile(tx, ty);
                 if (!tile)
                     continue;
-                this.drawTile(tx, ty, tile.terrain, tile.elevation);
+                this.drawTile(offCtx, tx, ty, tile.terrain, tile.elevation);
             }
         }
-        this.dirty = false;
     }
-    drawTile(tx, ty, terrain, elevation) {
-        const ctx = this.ctx;
+    drawTile(ctx, tx, ty, terrain, elevation) {
         const camera = this.camera;
         const center = IsoProjection.worldToScreen(tx + 0.5, ty + 0.5, elevation, camera);
         const hw = (TILE_WIDTH / 2) * camera.zoom;

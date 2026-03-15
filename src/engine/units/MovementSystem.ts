@@ -1,7 +1,7 @@
 import type { UnitInstance } from '../../types/unit';
 import { worldToDirection } from './Unit';
 
-const UNIT_SPEED = 0.003; // tiles per ms
+const UNIT_SPEED = 3.0; // tiles per second
 
 export class MovementSystem {
   update(unit: UnitInstance, dt: number): void {

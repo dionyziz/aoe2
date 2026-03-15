@@ -14,7 +14,7 @@
 /* ── Base overlay ───────────────────────────────────────────── */
 
 .menu-screen {
-  position: absolute;
+  position: fixed;
   inset: 0;
   display: flex;
   align-items: center;
@@ -22,7 +22,7 @@
   background: radial-gradient(ellipse at center, #2d1a08 0%, #0e0804 70%, #000 100%);
   font-family: var(--font-ui);
   color: var(--color-text-primary);
-  z-index: 50;
+  z-index: 100;
   animation: menuFadeIn 0.25s ease both;
 }
 
@@ -296,17 +296,36 @@
 
 .tech-btn.researched {
   background: rgba(48, 80, 28, 0.7);
-  border-color: #48c840;
-  color: #90d870;
+  border-color: var(--color-hp-high);
+  color: var(--color-hp-high);
+}
+
+.tech-btn.researched::after {
+  content: ' ✓';
+  color: var(--color-hp-high);
 }
 
 .tech-btn.available {
   border-color: var(--color-panel-border-bright);
+  box-shadow: var(--glow-gold);
+}
+
+.tech-btn.available.cant-afford {
+  border-color: var(--color-panel-border-bright);
+  box-shadow: none;
+  cursor: pointer;
 }
 
 .tech-btn.locked {
   opacity: 0.35;
   cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+.tech-btn.locked::before {
+  content: '🔒';
+  font-size: 9px;
+  margin-right: 4px;
 }
 
 .tech-btn.locked:hover {

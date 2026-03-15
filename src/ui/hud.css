@@ -16,7 +16,7 @@
 /* ── Top resource bar ───────────────────────────────────────── */
 
 #hud-top {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -82,7 +82,7 @@
 /* ── Bottom panel ────────────────────────────────────────────── */
 
 #hud-bottom {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
@@ -136,7 +136,7 @@
 
 .hp-bar-track {
   height: 6px;
-  background: #222;
+  background: var(--color-hp-bg);
   border-radius: var(--radius-sm);
   overflow: hidden;
   margin-top: var(--sp-1);
@@ -276,11 +276,11 @@
 /* ── Minimap ─────────────────────────────────────────────────── */
 
 #minimap-panel {
-  position: absolute;
-  bottom: var(--hud-bottom-height);
+  position: fixed;
+  bottom: 0;
   right: 0;
-  width: var(--hud-minimap-size);
-  height: var(--hud-minimap-size);
+  width: var(--minimap-size);
+  height: var(--minimap-size);
   background: #0a1a0a;
   border: var(--border-panel);
   border-bottom: none;

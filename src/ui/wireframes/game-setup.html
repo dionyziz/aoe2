@@ -4,13 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AoE Web — Game Setup Wireframe</title>
+  <link rel="stylesheet" href="../design-tokens.css">
+  <link rel="stylesheet" href="../menus.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       width: 100vw;
       height: 100vh;
-      overflow: hidden;
+      overflow: auto;
       font-family: 'Palatino Linotype', Georgia, serif;
       color: #e8d890;
       background: radial-gradient(ellipse at center, #2d1a08 0%, #0e0804 70%, #000 100%);
@@ -314,6 +316,40 @@
             <option selected>Normal</option>
             <option>Fast</option>
             <option>Fastest</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label">Starting Resources</label>
+          <select class="setting-select">
+            <option selected>Standard</option>
+            <option>Medium</option>
+            <option>High</option>
+            <option>Infinite</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label">Population Cap</label>
+          <select class="setting-select">
+            <option>75</option>
+            <option>100</option>
+            <option>125</option>
+            <option>150</option>
+            <option>175</option>
+            <option selected>200</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label">Fog of War</label>
+          <select class="setting-select">
+            <option selected>On</option>
+            <option>Off</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label">Reveal Map</label>
+          <select class="setting-select">
+            <option selected>Off</option>
+            <option>On</option>
           </select>
         </div>
       </div>

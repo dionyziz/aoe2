@@ -10,7 +10,8 @@
   --color-bg-dark:            #1a1208;
   --color-bg-medium:          #2d2010;
   --color-bg-light:           #3d2f18;
-  --color-panel-bg:           rgba(18, 12, 4, 0.94);
+  --color-bg-panel:           rgba(18, 12, 4, 0.94);
+  --color-panel-bg:           rgba(18, 12, 4, 0.94); /* alias — prefer --color-bg-panel */
   --color-panel-border:       #5a4020;
   --color-panel-border-bright:#8a6030;
   --color-panel-border-gold:  #c8921a;
@@ -34,15 +35,15 @@
   --color-hp-low:             #c83020;
   --color-hp-bg:              #1a1a1a;
 
-  /* ── Player colours (0–7) ───────────────────────────────── */
-  --player-0:                 #1060d8;
-  --player-1:                 #d82020;
-  --player-2:                 #20a820;
-  --player-3:                 #d8c020;
-  --player-4:                 #18b8a0;
-  --player-5:                 #a020c0;
-  --player-6:                 #909090;
-  --player-7:                 #d87820;
+  /* ── Player colours (1–8, AoE2 1-indexed) ──────────────── */
+  --player-1:                 #1060d8;
+  --player-2:                 #d82020;
+  --player-3:                 #20a820;
+  --player-4:                 #d8c020;
+  --player-5:                 #18b8a0;
+  --player-6:                 #a020c0;
+  --player-7:                 #909090;
+  --player-8:                 #d87820;
 
   /* ── Age colours ────────────────────────────────────────── */
   --age-dark:                 #808080;
@@ -75,7 +76,8 @@
   --hud-top-height:     36px;
   --hud-bottom-height:  170px;
   --hud-panel-width:    240px;
-  --hud-minimap-size:   200px;
+  --minimap-size:       200px;
+  --hud-minimap-size:   200px; /* alias — prefer --minimap-size */
   --hud-action-btn-size:48px;
 
   /* ── Borders & radii ─────────────────────────────────────── */

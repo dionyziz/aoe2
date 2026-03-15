@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AoE Web — HUD Wireframe</title>
+  <link rel="stylesheet" href="../design-tokens.css">
+  <link rel="stylesheet" href="../hud.css">
   <style>
-    /* ── Google Fonts fallback — we use system fonts that approximate Cinzel ── */
+    /* ── Wireframe-only overrides & demo helpers ─────────────── */
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -47,7 +49,7 @@
 
     /* ── Top bar ──────────────────────────────────────────────── */
     #hud-top {
-      position: absolute;
+      position: fixed;
       top: 0; left: 0; right: 0;
       height: 36px;
       background: rgba(18, 12, 4, 0.94);
@@ -97,10 +99,10 @@
       margin-left: auto;
     }
 
-    /* ── Minimap ──────────────────────────────────────────────── */
+    /* ── Minimap (overrides hud.css for wireframe demo) ──────── */
     #minimap-panel {
-      position: absolute;
-      bottom: 170px;
+      position: fixed;
+      bottom: 0;
       right: 0;
       width: 200px; height: 200px;
       background: #0a1a0a;
@@ -126,8 +128,9 @@
 
     /* ── Bottom panel ─────────────────────────────────────────── */
     #hud-bottom {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
+      position: fixed;
+      bottom: 0; left: 0;
+      right: 200px; /* leave space for 200px minimap */
       height: 170px;
       display: flex;
       background: rgba(18, 12, 4, 0.94);

@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AoE Web — Tech Tree Wireframe</title>
+  <link rel="stylesheet" href="../design-tokens.css">
+  <link rel="stylesheet" href="../menus.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -164,16 +166,24 @@
 
     .tech-btn.available {
       border-color: #8a6030;
+      box-shadow: 0 0 6px rgba(212, 170, 32, 0.3);
     }
 
     .tech-btn.available:hover {
       border-color: #d4aa20;
-      box-shadow: 0 0 6px rgba(212,170,32,0.3);
+      box-shadow: 0 0 12px rgba(212,170,32,0.5);
+    }
+
+    .tech-btn.available.cant-afford {
+      border-color: #8a6030;
+      box-shadow: none;
+      cursor: pointer;
     }
 
     .tech-btn.locked {
       opacity: 0.35;
       cursor: not-allowed;
+      filter: grayscale(1);
     }
 
     .tech-btn.locked::before {
@@ -302,7 +312,7 @@
           <div class="tech-age-label feudal">Feudal Age</div>
           <button class="tech-btn available">Supplies</button>
           <button class="tech-btn available">Man-at-Arms</button>
-          <button class="tech-btn available">Pikeman</button>
+          <button class="tech-btn available cant-afford" title="Cannot afford">Pikeman</button>
           <button class="tech-btn available">Squires</button>
 
           <div class="tech-age-label castle">Castle Age</div>
@@ -397,6 +407,10 @@
         <div class="legend-item">
           <div class="legend-swatch available"></div>
           <span>Available</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch available" style="box-shadow:none;border-color:#5a4020"></div>
+          <span>Available (can't afford)</span>
         </div>
         <div class="legend-item">
           <div class="legend-swatch locked"></div>

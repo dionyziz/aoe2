@@ -1,0 +1,9 @@
+{
+  "id": "town_center",
+  "name": "Town Center",
+  "hp": 2400,
+  "size": 4,
+  "cost": { "food": 0, "wood": 275, "gold": 0, "stone": 100 },
+  "buildTime": 150,
+  "spriteId": "town_center"
+}

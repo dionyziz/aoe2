@@ -1,0 +1,14 @@
+{
+  "id": "militia",
+  "name": "Militia",
+  "class": "infantry",
+  "hp": 40,
+  "speed": 0.9,
+  "attackDamage": 4,
+  "attackRange": 1,
+  "attackSpeed": 2.0,
+  "lineOfSight": 4,
+  "cost": { "food": 60, "wood": 0, "gold": 0, "stone": 0 },
+  "trainTime": 21,
+  "spriteId": "militia"
+}

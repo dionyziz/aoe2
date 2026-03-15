@@ -1,0 +1,9 @@
+export const TILE_WIDTH = 64;
+export const TILE_HEIGHT = 32;
+export const TICK_MS = 50; // 20 Hz simulation
+export const TARGET_FPS = 60;
+export const MIN_ZOOM = 0.5;
+export const MAX_ZOOM = 2.0;
+export const EDGE_SCROLL_THRESHOLD = 20; // px from edge
+export const EDGE_SCROLL_SPEED = 8;
+export const CAMERA_PAN_SPEED = 8;

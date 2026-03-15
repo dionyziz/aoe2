@@ -1,334 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game Setup — Age of Web</title>
-<style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-button { background: none; border: none; font: inherit; color: inherit; cursor: pointer; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AoE Web — Game Setup Wireframe</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --color-bg-darkest:          #0e0a04;
-  --color-bg-dark:             #1a1208;
-  --color-bg-medium:           #2d2010;
-  --color-bg-light:            #3d2f18;
-  --color-panel-bg:            rgba(18, 12, 4, 0.98);
-  --color-panel-border:        #5a4020;
-  --color-panel-border-bright: #8a6030;
-  --color-panel-inner:         rgba(40, 28, 10, 0.70);
-  --color-text-primary:   #e8d890;
-  --color-text-secondary: #b09060;
-  --color-text-muted:     #706040;
-  --color-gold:       #d4aa20;
-  --color-gold-light: #f0cc40;
-  --color-gold-dim:   #8a6e14;
-  --font-ui:   Georgia, 'Times New Roman', serif;
-  --font-body: Georgia, 'Times New Roman', serif;
-  --font-mono: 'Courier New', monospace;
-  --text-xs: 10px; --text-sm: 12px; --text-md: 14px;
-  --text-lg: 17px; --text-xl: 22px;
-  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px;
-  --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
-  --radius-sm: 3px; --radius-md: 6px; --radius-lg: 12px;
-  --shadow-panel: 0 4px 20px rgba(0,0,0,0.8);
-  --glow-gold: 0 0 12px rgba(212,170,32,0.5);
-  --border-panel: 2px solid #5a4020;
-}
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Palatino Linotype', Georgia, serif;
+      color: #e8d890;
+      background: radial-gradient(ellipse at center, #2d1a08 0%, #0e0804 70%, #000 100%);
+      display: flex;
+    }
 
-html, body {
-  width: 100%; height: 100%;
-  overflow: hidden;
-  background: radial-gradient(ellipse at center, #2d1a08 0%, #0e0804 60%, #000 100%);
-  font-family: var(--font-body);
-  color: var(--color-text-primary);
-  user-select: none;
-}
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #5a4020; border-radius: 3px; }
 
-/* ── Page layout ── */
-.setup-page {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  padding: var(--sp-4);
-  gap: var(--sp-3);
-  overflow: hidden;
-}
+    /* ── Left column ─────────────────────────────────────────── */
+    #left-col {
+      width: 480px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      border-right: 2px solid #5a4020;
+      background: rgba(18, 12, 4, 0.6);
+      overflow: hidden;
+    }
 
-/* ── Header ── */
-.setup-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: var(--sp-2);
-  border-bottom: 1px solid var(--color-panel-border-bright);
-  flex-shrink: 0;
-}
+    .col-header {
+      font-family: 'Palatino Linotype', Georgia, serif;
+      font-size: 17px;
+      color: #d4aa20;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #5a4020;
+      flex-shrink: 0;
+    }
 
-.setup-title {
-  font-family: var(--font-ui);
-  font-size: var(--text-xl);
-  color: var(--color-gold-light);
-  letter-spacing: 0.08em;
-}
+    /* Civ grid */
+    .civ-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+      overflow-y: auto;
+      padding: 8px;
+      background: rgba(18, 12, 4, 0.7);
+      border: 2px solid #5a4020;
+      border-radius: 6px;
+      flex: 1;
+    }
 
-.back-btn {
-  padding: var(--sp-1) var(--sp-3);
-  background: var(--color-panel-inner);
-  border: 1px solid var(--color-panel-border);
-  border-radius: var(--radius-sm);
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: border-color 0.1s, color 0.1s;
-}
-.back-btn:hover { border-color: var(--color-gold-dim); color: var(--color-gold); }
+    .civ-shield {
+      aspect-ratio: 3 / 4;
+      background: #2d2010;
+      border: 1px solid #5a4020;
+      border-radius: 3px 3px 50% 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 7px;
+      color: #706040;
+      text-align: center;
+      padding: 2px;
+      transition: border-color 0.1s, background 0.1s;
+      line-height: 1.2;
+      user-select: none;
+    }
 
-/* ── Main content row ── */
-.setup-body {
-  display: flex;
-  gap: var(--sp-4);
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
+    .civ-shield:hover {
+      border-color: #8a6030;
+    }
 
-/* ── LEFT: Civ picker ── */
-.civ-picker-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-  min-width: 0;
-}
+    .civ-shield.selected {
+      border-color: #d4aa20;
+      background: rgba(212, 170, 32, 0.15);
+      color: #d4aa20;
+    }
 
-.section-label {
-  font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  color: var(--color-gold);
-  letter-spacing: 0.06em;
-  flex-shrink: 0;
-}
+    /* ── Right column ────────────────────────────────────────── */
+    #right-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto;
+      gap: 16px;
+    }
 
-.civ-grid {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 4px;
-  overflow-y: auto;
-  padding: var(--sp-2);
-  background: var(--color-panel-inner);
-  border: 2px solid var(--color-panel-border);
-  border-radius: var(--radius-md);
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-gold-dim) transparent;
-  flex: 1;
-  align-content: start;
-}
+    /* Civ info panel */
+    #civ-info {
+      background: rgba(18, 12, 4, 0.7);
+      border: 2px solid #5a4020;
+      border-radius: 6px;
+      padding: 16px;
+    }
 
-.civ-shield {
-  aspect-ratio: 3 / 4;
-  background: var(--color-bg-medium);
-  border: 1px solid var(--color-panel-border);
-  border-radius: 2px 2px 50% 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  cursor: pointer;
-  padding: 2px 1px 5px;
-  transition: border-color 0.1s, background 0.1s;
-  text-align: center;
-  font-size: 7px;
-  color: var(--color-text-secondary);
-  gap: 2px;
-}
-.civ-shield:hover { border-color: var(--color-gold-dim); background: var(--color-bg-light); }
-.civ-shield.selected {
-  border-color: var(--color-gold);
-  background: rgba(212,170,32,0.15);
-  color: var(--color-gold-light);
-}
+    .civ-name {
+      font-size: 22px;
+      color: #f8f0b0;
+      font-family: 'Palatino Linotype', Georgia, serif;
+      margin-bottom: 8px;
+    }
 
-.civ-shield-inner {
-  width: 72%;
-  height: 52%;
-  background: var(--color-bg-light);
-  border-radius: 1px 1px 40% 40%;
-  flex-shrink: 0;
-}
-.civ-shield.selected .civ-shield-inner { background: rgba(212,170,32,0.28); }
+    .civ-unique-unit {
+      font-size: 14px;
+      color: #d4aa20;
+      margin-bottom: 12px;
+    }
 
-.civ-name-abbr { line-height: 1.1; }
+    .civ-bonuses-label {
+      font-size: 10px;
+      color: #706040;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
 
-/* ── RIGHT: Civ info + settings ── */
-.right-col {
-  width: 300px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-gold-dim) transparent;
-}
+    .civ-bonuses {
+      font-size: 12px;
+      color: #b09060;
+      line-height: 1.7;
+      padding-left: 16px;
+    }
 
-/* Civ info card */
-.civ-info-card {
-  background: var(--color-panel-inner);
-  border: 2px solid var(--color-panel-border);
-  border-radius: var(--radius-md);
-  padding: var(--sp-3);
-  flex-shrink: 0;
-}
+    .civ-bonuses li { margin-bottom: 4px; }
 
-.civ-info-name {
-  font-family: var(--font-ui);
-  font-size: var(--text-lg);
-  color: var(--color-gold);
-  margin-bottom: 2px;
-}
+    /* Settings */
+    #settings-section {
+      background: rgba(18, 12, 4, 0.7);
+      border: 2px solid #5a4020;
+      border-radius: 6px;
+      padding: 16px;
+    }
 
-.civ-info-sub {
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--sp-2);
-}
+    .settings-header {
+      font-family: 'Palatino Linotype', Georgia, serif;
+      font-size: 13px;
+      color: #d4aa20;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #5a4020;
+    }
 
-.civ-bonus-title {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px 20px;
+    }
 
-.civ-bonus-list {
-  list-style: none;
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-  line-height: 1.7;
-}
-.civ-bonus-list li::before { content: '▸ '; color: var(--color-gold-dim); }
+    .setting-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
-/* Settings panel */
-.settings-card {
-  background: var(--color-panel-inner);
-  border: 2px solid var(--color-panel-border);
-  border-radius: var(--radius-md);
-  padding: var(--sp-3);
-}
+    .setting-label {
+      font-size: 10px;
+      color: #706040;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
 
-.settings-card-title {
-  font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  color: var(--color-gold);
-  letter-spacing: 0.06em;
-  margin-bottom: var(--sp-2);
-  padding-bottom: var(--sp-1);
-  border-bottom: 1px solid var(--color-panel-border);
-}
+    .setting-select {
+      background: #2d2010;
+      border: 2px solid #5a4020;
+      border-radius: 3px;
+      color: #e8d890;
+      font-size: 12px;
+      padding: 4px 8px;
+      font-family: 'Palatino Linotype', Georgia, serif;
+      cursor: pointer;
+    }
 
-.settings-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px 0;
-  border-bottom: 1px solid rgba(90,64,32,0.25);
-  font-size: var(--text-xs);
-  gap: var(--sp-2);
-}
-.settings-row:last-child { border-bottom: none; }
+    .setting-select:focus {
+      outline: none;
+      border-color: #d4aa20;
+    }
 
-.settings-label { color: var(--color-text-secondary); flex-shrink: 0; }
+    /* Bottom buttons */
+    #bottom-btns {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+      flex-shrink: 0;
+    }
 
-.settings-row select {
-  background: var(--color-bg-medium);
-  border: 1px solid var(--color-panel-border);
-  border-radius: var(--radius-sm);
-  color: var(--color-text-primary);
-  padding: 2px 6px;
-  font-size: var(--text-xs);
-  font-family: var(--font-body);
-  min-width: 0;
-  cursor: pointer;
-}
-.settings-row select:focus { outline: 1px solid var(--color-gold-dim); }
+    .menu-btn {
+      flex: 1;
+      padding: 12px 24px;
+      background: rgba(18, 12, 4, 0.94);
+      border: 2px solid #5a4020;
+      border-radius: 6px;
+      color: #e8d890;
+      font-family: 'Palatino Linotype', Georgia, serif;
+      font-size: 15px;
+      cursor: pointer;
+      text-align: center;
+      letter-spacing: 0.05em;
+      transition: border-color 0.15s, color 0.15s, box-shadow 0.15s;
+    }
 
-/* ── Footer: Start button ── */
-.setup-footer {
-  flex-shrink: 0;
-}
+    .menu-btn:hover {
+      border-color: #d4aa20;
+      color: #f8f0b0;
+      box-shadow: 0 0 12px rgba(212,170,32,0.5);
+    }
 
-.start-btn {
-  display: block;
-  width: 100%;
-  padding: var(--sp-3) var(--sp-5);
-  background: var(--color-panel-inner);
-  border: 2px solid var(--color-gold);
-  border-radius: var(--radius-md);
-  color: var(--color-gold);
-  font-family: var(--font-ui);
-  font-size: var(--text-xl);
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  text-align: center;
-  transition: background 0.15s, box-shadow 0.15s, color 0.15s;
-  min-height: 52px;
-}
-.start-btn:hover {
-  background: rgba(212,170,32,0.12);
-  box-shadow: var(--glow-gold), 0 0 30px rgba(212,170,32,0.20);
-  color: var(--color-gold-light);
-}
-.start-btn:active { background: rgba(212,170,32,0.20); }
-</style>
+    .menu-btn.primary {
+      border-color: #d4aa20;
+      color: #d4aa20;
+      font-size: 17px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="setup-page">
-
-  <!-- Header -->
-  <div class="setup-header">
-    <h1 class="setup-title">Game Setup</h1>
-    <button class="back-btn" onclick="alert('← Back to Main Menu')">← Main Menu</button>
+  <!-- Left column: civilization picker -->
+  <div id="left-col">
+    <div class="col-header">&#x2694; Choose Civilization</div>
+    <div class="civ-grid" id="civ-grid">
+      <!-- Populated by script below -->
+    </div>
   </div>
 
-  <!-- Body -->
-  <div class="setup-body">
+  <!-- Right column: info + settings -->
+  <div id="right-col">
 
-    <!-- LEFT: Civ picker -->
-    <div class="civ-picker-col">
-      <div class="section-label">Choose Your Civilization</div>
-      <div class="civ-grid" id="civ-grid">
-        <!-- Populated by JS below -->
-      </div>
+    <!-- Civ info -->
+    <div id="civ-info">
+      <div class="civ-name" id="civ-name-display">Britons</div>
+      <div class="civ-unique-unit" id="civ-unique-display">&#x2605; Unique Unit: Longbowman, Elite Longbowman</div>
+      <div class="civ-bonuses-label">Civilization Bonuses</div>
+      <ul class="civ-bonuses" id="civ-bonuses-display">
+        <li>Archers (except Cavalry Archers) have +1 range in Feudal Age, +2 in Castle Age, +3 in Imperial Age.</li>
+        <li>Town Centers cost -50% wood in Castle Age and Imperial Age.</li>
+        <li>Shepherds work 25% faster.</li>
+      </ul>
     </div>
 
-    <!-- RIGHT: Info + Settings -->
-    <div class="right-col">
-
-      <!-- Civ info -->
-      <div class="civ-info-card" id="civ-info">
-        <div class="civ-info-name" id="civ-info-name">Britons</div>
-        <div class="civ-info-sub" id="civ-info-unit">Unique Units: Longbowman, Elite Longbowman</div>
-        <div class="civ-bonus-title">Civilization Bonuses</div>
-        <ul class="civ-bonus-list" id="civ-info-bonuses">
-          <li>Town Centers cost 50% less wood</li>
-          <li>Foot archers (except Skirmishers) have +1 range per age from Feudal onwards (max +3)</li>
-          <li>Shepherds work 25% faster</li>
-          <li>Team Bonus: Archery Ranges work 20% faster</li>
-        </ul>
-      </div>
-
-      <!-- Game settings -->
-      <div class="settings-card">
-        <div class="settings-card-title">Map &amp; Game Settings</div>
-
-        <div class="settings-row">
-          <span class="settings-label">Map Type</span>
-          <select>
+    <!-- Game settings -->
+    <div id="settings-section">
+      <div class="settings-header">&#x2699; Game Settings</div>
+      <div class="settings-grid">
+        <div class="setting-row">
+          <label class="setting-label">Map Type</label>
+          <select class="setting-select">
             <option>Random</option>
-            <option selected>Arabia</option>
+            <option>Arabia</option>
             <option>Black Forest</option>
             <option>Islands</option>
             <option>Coastal</option>
@@ -336,22 +265,30 @@ html, body {
             <option>Nomad</option>
           </select>
         </div>
-
-        <div class="settings-row">
-          <span class="settings-label">Map Size</span>
-          <select>
-            <option>Tiny (120×120)</option>
-            <option>Small (144×144)</option>
-            <option>Medium (168×168)</option>
-            <option selected>Normal (200×200)</option>
-            <option>Large (220×220)</option>
-            <option>Huge (240×240)</option>
+        <div class="setting-row">
+          <label class="setting-label">Map Size</label>
+          <select class="setting-select">
+            <option>Tiny</option>
+            <option>Small</option>
+            <option>Medium</option>
+            <option selected>Normal</option>
+            <option>Large</option>
+            <option>Huge</option>
           </select>
         </div>
-
-        <div class="settings-row">
-          <span class="settings-label">AI Count</span>
-          <select>
+        <div class="setting-row">
+          <label class="setting-label">Victory</label>
+          <select class="setting-select">
+            <option selected>Conquest</option>
+            <option>Wonder</option>
+            <option>Regicide</option>
+            <option>Score</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label">AI Count</label>
+          <select class="setting-select">
+            <option>0</option>
             <option selected>1</option>
             <option>2</option>
             <option>3</option>
@@ -361,165 +298,111 @@ html, body {
             <option>7</option>
           </select>
         </div>
-
-        <div class="settings-row">
-          <span class="settings-label">AI Difficulty</span>
-          <select>
+        <div class="setting-row">
+          <label class="setting-label">AI Difficulty</label>
+          <select class="setting-select">
             <option>Easiest</option>
             <option selected>Standard</option>
             <option>Hard</option>
             <option>Hardest</option>
           </select>
         </div>
-
-        <div class="settings-row">
-          <span class="settings-label">Starting Resources</span>
-          <select>
-            <option selected>Standard</option>
-            <option>Medium</option>
-            <option>High</option>
-            <option>Infinite</option>
-          </select>
-        </div>
-
-        <div class="settings-row">
-          <span class="settings-label">Population Cap</span>
-          <select>
-            <option>75</option>
-            <option>100</option>
-            <option>125</option>
-            <option>150</option>
-            <option>175</option>
-            <option selected>200</option>
-          </select>
-        </div>
-
-        <div class="settings-row">
-          <span class="settings-label">Victory</span>
-          <select>
-            <option selected>Conquest</option>
-            <option>Wonder</option>
-            <option>Regicide</option>
-            <option>Score</option>
-          </select>
-        </div>
-
-        <div class="settings-row">
-          <span class="settings-label">Game Speed</span>
-          <select>
+        <div class="setting-row">
+          <label class="setting-label">Speed</label>
+          <select class="setting-select">
             <option>Slow</option>
             <option selected>Normal</option>
             <option>Fast</option>
             <option>Fastest</option>
           </select>
         </div>
+      </div>
+    </div>
 
-        <div class="settings-row">
-          <span class="settings-label">Fog of War</span>
-          <select>
-            <option selected>On</option>
-            <option>Off</option>
-          </select>
-        </div>
+    <!-- Action buttons -->
+    <div id="bottom-btns">
+      <button class="menu-btn">&#x2190; Back</button>
+      <button class="menu-btn primary">Start Game &#x2192;</button>
+    </div>
 
-        <div class="settings-row">
-          <span class="settings-label">Reveal Map</span>
-          <select>
-            <option selected>Off</option>
-            <option>On</option>
-          </select>
-        </div>
+  </div><!-- #right-col -->
 
-      </div><!-- /settings-card -->
-    </div><!-- /right-col -->
-  </div><!-- /setup-body -->
+  <script>
+    // ── Civilization data ────────────────────────────────────────
+    const CIVS = [
+      { name: 'Armenians',    abbr: 'Arm',  unit: 'Composite Bowman',    bonuses: ['Infantry have +2 attack vs. archers.', 'Fortified Church available.', 'Infantry upgrade line available.'] },
+      { name: 'Aztecs',       abbr: 'Azt',  unit: 'Jaguar Warrior',       bonuses: ['Villagers carry +3 resources.', 'Military units created 11% faster.', 'Monks +5 HP per Monastery tech.'] },
+      { name: 'Bengalis',     abbr: 'Ben',  unit: 'Ratha',                bonuses: ['Town Centers spawn 1 extra Villager on advance.', 'Elephant units +15% more HP.', 'Ships regenerate HP.'] },
+      { name: 'Berbers',      abbr: 'Ber',  unit: 'Camel Archer',         bonuses: ['Villagers move 10% faster.', 'Stable units cost -15%/−20% in Castle/Imperial.', 'Ships move 10% faster.'] },
+      { name: 'Bohemians',    abbr: 'Boh',  unit: 'Hussite Wagon',        bonuses: ['Mining Camp techs free.', 'Spearmen/Skirmishers +1 pierce armor.', 'Gunpowder units +25% attack speed.'] },
+      { name: 'Britons',      abbr: 'Brit', unit: 'Longbowman',           bonuses: ['Archers (not CA) +1/+2/+3 range Feudal/Castle/Imperial.', 'Town Centers cost −50% wood (Castle/Imperial).', 'Shepherds work 25% faster.'] },
+      { name: 'Bulgarians',   abbr: 'Bul',  unit: 'Konnik',               bonuses: ['Militia-line upgrades free.', 'Blacksmith techs cost −50% food.', 'Kreposts fire arrows.'] },
+      { name: 'Burgundians',  abbr: 'Burg', unit: 'Coustillier',          bonuses: ['Economic upgrades cost 50% less food.', 'Cavalier available in Feudal Age.', 'Relics generate 1.5× gold.'] },
+      { name: 'Burmese',      abbr: 'Bur',  unit: 'Arambai',              bonuses: ['Lumber Camp upgrades free.', 'Monks get +5 melee armor.', 'Elephants +100 HP.'] },
+      { name: 'Byzantines',   abbr: 'Byz',  unit: 'Cataphract',           bonuses: ['Buildings +10/+20/+30/+40% HP per age.', 'Spearmen/Camel units cost −25%.', 'Greek Fire 0 cost.'] },
+      { name: 'Celts',        abbr: 'Cel',  unit: 'Woad Raider',          bonuses: ['Infantry move 15% faster.', 'Lumberjacks work 15% faster.', 'Siege Workshop units fire 25% faster.'] },
+      { name: 'Chinese',      abbr: 'Chi',  unit: 'Chu Ko Nu',            bonuses: ['Start with +3 Villagers, −200 food.', 'Technologies cost −15% in Feudal, −20% in Castle.', 'Demolition Ships +50% HP.'] },
+      { name: 'Cumans',       abbr: 'Cum',  unit: 'Kipchak',              bonuses: ['Palisade walls built 50% faster.', 'Siege Workshops work 20% faster.', 'Cavalry move 10%/15% faster in Feudal/Castle.'] },
+      { name: 'Dravidians',   abbr: 'Drav', unit: 'Urumi Swordsman',      bonuses: ['Start with +200 food.', 'Barracks units +3 pierce armor.', 'Elephant units train 25% faster.'] },
+      { name: 'Ethiopians',   abbr: 'Eth',  unit: 'Shotel Warrior',       bonuses: ['+100 food and gold upon advancing age.', 'Towers and Outposts +2 range.', 'Pikemen/Halberdiers train 20% faster.'] },
+      { name: 'Franks',       abbr: 'Fra',  unit: 'Throwing Axeman',      bonuses: ['Farm upgrades free.', 'Castles cost -25%.', 'Cavalry +20% HP.'] },
+      { name: 'Georgians',    abbr: 'Geo',  unit: 'Monaspa',              bonuses: ['Units near Monasteries and Castles get armor bonus.', 'Town Centers fire arrows without garrison.', 'Kits fire arrows.'] },
+      { name: 'Goths',        abbr: 'Got',  unit: 'Huskarl',              bonuses: ['Infantry cost −35% in Imperial Age.', 'Infantry +1 vs buildings per age.', 'Can garrison Huskarls in TC.'] },
+      { name: 'Gurjaras',     abbr: 'Gur',  unit: 'Shrivamsha Rider',     bonuses: ['Start with 2 sheep scouted.', 'Camel Scouts available in Dark Age.', 'Chakram Throwers available.'] },
+      { name: 'Hindustanis',  abbr: 'Hin',  unit: 'Ghulam',               bonuses: ['Villagers cost −10% per age (max −40%).', 'Gunpowder units cost −20%.', 'Camels +1/+2 pierce armor in Castle/Imperial.'] },
+      { name: 'Huns',         abbr: 'Hun',  unit: 'Tarkan',               bonuses: ['No need to build Houses.', 'Cavalry Archers cost −10%/−20% in Castle/Imperial.', 'Stables work 20% faster.'] },
+      { name: 'Incas',        abbr: 'Inc',  unit: 'Kamayuk',              bonuses: ['Houses support 10 pop.', 'Villagers +5 HP per age.', 'Military units trained 18% faster.'] },
+      { name: 'Italians',     abbr: 'Ita',  unit: 'Genoese Crossbowman',  bonuses: ['Advancing in age costs −15%.', 'Dock and University techs cost −33%.', 'Gunpowder units cost −20%.'] },
+      { name: 'Japanese',     abbr: 'Jap',  unit: 'Samurai',              bonuses: ['Fishing Ships +2×2 work/carry.', 'Militia-line +2 attack speed.', 'Towers/Castles +5 range.'] },
+      { name: 'Khmer',        abbr: 'Khm',  unit: 'Ballista Elephant',    bonuses: ['No need for tech prerequisites.', 'Villagers can garrison in Houses.', 'Battering Rams created faster.'] },
+      { name: 'Koreans',      abbr: 'Kor',  unit: 'War Wagon',            bonuses: ['Villagers +3 LOS.', 'Stone Mining upgrades free.', 'Towers +1 range per age.'] },
+      { name: 'Lithuanians',  abbr: 'Lit',  unit: 'Leitis',               bonuses: ['Start with +150 food.', 'Monasteries and Relics generate extra gold.', 'Cavalry +1 attack per Relic held (up to 4).'] },
+      { name: 'Magyars',      abbr: 'Mag',  unit: 'Magyar Huszar',        bonuses: ['Scout Cavalry upgrades free.', 'Villagers kill wolves in 1 hit.', 'Forging/Iron Casting/Blast Furnace free.'] },
+      { name: 'Malay',        abbr: 'Mal',  unit: 'Karambit Warrior',     bonuses: ['Advancing ages 80% faster.', 'Fish Traps free.', 'Battle Elephants cost −30%.'] },
+      { name: 'Malians',      abbr: 'Mln',  unit: 'Gbeto',                bonuses: ['Gold Mining techs free.', 'Infantry +5 pierce armor.', 'Market costs −100 wood.'] },
+      { name: 'Mayans',       abbr: 'May',  unit: 'Plumed Archer',        bonuses: ['Start with 1 extra Villager, −50 food.', 'Resources last 15% longer.', 'Archers cost −10/−20/−30% per age.'] },
+      { name: 'Mongols',      abbr: 'Mon',  unit: 'Mangudai',             bonuses: ['Cavalry Archers fire 25% faster.', 'Scouts have +30 HP.', 'Siege Workshops work 50% faster.'] },
+      { name: 'Persians',     abbr: 'Per',  unit: 'War Elephant',         bonuses: ['Start with +50 food and +50 wood.', 'Town Centers and Docks +5/+10/+15% work speed per age.', 'Knights +2 attack vs archers.'] },
+      { name: 'Poles',        abbr: 'Pol',  unit: 'Obuch',                bonuses: ['Villagers get gold when mining stone.', 'Scout line +15% HP.', 'Farm upgrades immediately available.'] },
+      { name: 'Portuguese',   abbr: 'Por',  unit: 'Organ Gun',            bonuses: ['All units cost −15% gold.', 'Researches cost −30% time.', 'Ships +10% HP.'] },
+      { name: 'Romans',       abbr: 'Rom',  unit: 'Legionary',            bonuses: ['Barracks work 10% faster per age.', 'Legionary upgrade free.', 'Walls and towers cost −33%.'] },
+      { name: 'Saracens',     abbr: 'Sar',  unit: 'Mameluke',             bonuses: ['Market buys/sells at 5% fee (best in game).', 'Transport Ships 2× capacity.', 'Camel units +10 HP, Camel buildings +175 HP.'] },
+      { name: 'Sicilians',    abbr: 'Sic',  unit: 'Serjeant',             bonuses: ['TC and Donjons constructed 100% faster.', 'First hit from units absorbed (Hauberk).', 'Farm upgrades cost −33%.'] },
+      { name: 'Slavs',        abbr: 'Sla',  unit: 'Boyar',                bonuses: ['Farmers work 10% faster.', 'Military buildings -15% wood.', 'Siege units cost −15% wood.'] },
+      { name: 'Spanish',      abbr: 'Spa',  unit: 'Conquistador',         bonuses: ['Builders work 30% faster.', 'Blacksmith research no cost.', 'Trade units generate +25% gold.'] },
+      { name: 'Tatars',       abbr: 'Tat',  unit: 'Keshik',               bonuses: ['Herdables yield +50% food.', 'Cavalry Archers +2 LOS.', 'Units on hills +1 attack, +1 pierce armor.'] },
+      { name: 'Teutons',      abbr: 'Teu',  unit: 'Teutonic Knight',      bonuses: ['Monks convert 2× faster.', 'Towers garrison 2× units.', 'Farms cost −33%.'] },
+      { name: 'Turks',        abbr: 'Tur',  unit: 'Janissary',            bonuses: ['Gunpowder units +25% HP.', 'Chemistry free.', 'Light Cavalry and Hussar upgrades free.'] },
+      { name: 'Vietnamese',   abbr: 'Vie',  unit: 'Rattan Archer',        bonuses: ['Enemy bonuses visible on start.', 'Archers +20% HP per age.', 'Imperial Skirmisher available.'] },
+      { name: 'Vikings',      abbr: 'Vik',  unit: 'Berserker',            bonuses: ['Ships cost −15/−20%.', 'Wheelbarrow and Hand Cart free.', 'Infantry +20/+40 HP in Castle/Imperial.'] },
+    ];
 
-  <!-- Footer: Start Game -->
-  <div class="setup-footer">
-    <button class="start-btn" onclick="alert('Starting game…')">Start Game</button>
-  </div>
+    // ── Build civ grid ────────────────────────────────────────────
+    const grid = document.getElementById('civ-grid');
+    let selectedCiv = CIVS.find(c => c.name === 'Britons');
 
-</div><!-- /setup-page -->
+    CIVS.forEach(civ => {
+      const shield = document.createElement('div');
+      shield.className = 'civ-shield' + (civ.name === 'Britons' ? ' selected' : '');
+      shield.textContent = civ.abbr;
+      shield.title = civ.name;
+      shield.addEventListener('click', () => selectCiv(civ, shield));
+      grid.appendChild(shield);
+    });
 
-<script>
-// All 45 civilizations (sorted alphabetically, full names + 4-char abbreviations)
-const CIVS = [
-  { name: 'Armenians',   abbr: 'Arme', unit: 'Composite Bowman, Warrior Priest', bonuses: ['Cavalry can garrison in buildings', 'TCs and Castles build faster', 'Traders carry 10% more gold', 'Team Bonus: Monasteries work 10% faster'] },
-  { name: 'Aztecs',      abbr: 'Azte', unit: 'Jaguar Warrior, Elite Jaguar Warrior', bonuses: ['Villagers carry +3 resources', 'Military units created 11% faster', 'Start with +50 gold', 'Team Bonus: Relics generate +33% gold'] },
-  { name: 'Bengalis',    abbr: 'Beng', unit: 'Ratha, Elite Ratha', bonuses: ['Town Centers spawn an Elephant every 25 villager creations', 'Ships have +25% HP', 'Monks have +3 armor', 'Team Bonus: Cavalry have +1 melee/pierce armor'] },
-  { name: 'Berbers',     abbr: 'Berb', unit: 'Camel Archer, Elite Camel Archer', bonuses: ['Villagers move 10% faster', 'Stable units cost 15% less (Castle/Imperial)', 'Ships move 10% faster', 'Team Bonus: Genitour available in Archery Range'] },
-  { name: 'Bohemians',   abbr: 'Bohe', unit: 'Hussite Wagon, Hussite Wagon Elite', bonuses: ['Mining camps and farms researches free', 'Monks can use relics after 60s (no monastery needed)', 'Spearman line +2 attack vs unique units', 'Team Bonus: Monasteries provide +5 population'] },
-  { name: 'Britons',     abbr: 'Brit', unit: 'Longbowman, Elite Longbowman', bonuses: ['Town Centers cost 50% less wood', 'Foot archers +1 range per age from Feudal (max +3)', 'Shepherds work 25% faster', 'Team Bonus: Archery Ranges work 20% faster'] },
-  { name: 'Bulgarians',  abbr: 'Bulg', unit: 'Konnik, Elite Konnik', bonuses: ['Militia-line upgrades free', 'Blacksmith upgrades free after advancing age', 'Towers and Castles fire 25% faster', 'Team Bonus: Blacksmith works 80% faster'] },
-  { name: 'Burgundians', abbr: 'Burg', unit: 'Coustillier, Elite Coustillier', bonuses: ['Economic upgrades 50% cheaper', 'Cavalry can research upgrades one age early', 'Relics generate food in addition to gold', 'Team Bonus: Paladins available to train'] },
-  { name: 'Burmese',     abbr: 'Burm', unit: 'Arambai, Elite Arambai', bonuses: ['Lumber Camp techs free', 'Monasteries provide +5 pop each', 'Elephants +50% HP', 'Team Bonus: Manipur Cavalry: cavalry & Arambai +6 attack vs buildings'] },
-  { name: 'Byzantines',  abbr: 'Byza', unit: 'Cataphract, Elite Cataphract', bonuses: ['Buildings have +10/20/30/40% HP per age', 'Camel/Skirmisher/Spearman cost 25% less', 'Fire Ship attacks 20% faster', 'Team Bonus: Monks +50% heal speed'] },
-  { name: 'Celts',       abbr: 'Celt', unit: 'Woad Raider, Elite Woad Raider', bonuses: ['Infantry move 15% faster', 'Lumberjacks work 15% faster', 'Siege Workshop units trained 20% faster', 'Team Bonus: Siege weapons +1 attack vs buildings'] },
-  { name: 'Chinese',     abbr: 'Chin', unit: 'Chu Ko Nu, Elite Chu Ko Nu', bonuses: ['Start with +3 villagers but -200 food', 'Technologies 20% cheaper', 'Demolition ships +50% HP', 'Team Bonus: Farms +45 food'] },
-  { name: 'Cumans',      abbr: 'Cuma', unit: 'Kipchak, Elite Kipchak', bonuses: ['Cavalry move 10% faster in Feudal', 'Can build second TC in Feudal', 'Palisade Walls built 50% faster', 'Team Bonus: Cavalry Archers train 25% faster'] },
-  { name: 'Dravidians',  abbr: 'Drav', unit: 'Urumi Swordsman, Elite Urumi Swordsman', bonuses: ['Fishermen carry +15 resources', 'Docks cost 25% less', 'Infantry have +1 attack per age', 'Team Bonus: Elephant units cost 25% less'] },
-  { name: 'Ethiopians',  abbr: 'Ethi', unit: 'Shotel Warrior, Elite Shotel Warrior', bonuses: ['Receive 100 food/gold when advancing ages', 'Towers and Outposts have +3 attack', 'Pikemen and Halberdiers train 20% faster', 'Team Bonus: Towers fire 20% faster'] },
-  { name: 'Franks',      abbr: 'Fran', unit: 'Throwing Axeman, Elite Throwing Axeman', bonuses: ['Foragers work 15% faster', 'Castles cost 25% less stone', 'Mounted units have +20% HP', 'Team Bonus: Knights have +2 line of sight'] },
-  { name: 'Georgians',   abbr: 'Geor', unit: 'Monaspa, Elite Monaspa', bonuses: ['Fortifications cost 25% less', 'Cavalry have +1/+2 armor while near a fortification', 'Villagers build walls and towers 25% faster', 'Team Bonus: Castles have +5 LOS'] },
-  { name: 'Goths',       abbr: 'Goth', unit: 'Huskarl, Elite Huskarl', bonuses: ['Infantry cost 35% less', 'Garrisoned infantry fire arrows from buildings', 'Villagers +5 attack vs wild boar, hunt drops in place', 'Team Bonus: Barracks work 20% faster'] },
-  { name: 'Gurjaras',    abbr: 'Gurj', unit: 'Shrivamsha Rider, Elite Shrivamsha Rider', bonuses: ['Herds move 10% faster', 'Can garrison livestock in mills', 'Camel support units +1 attack', 'Team Bonus: Camel units +1 melee armor'] },
-  { name: 'Hindustanis', abbr: 'Hind', unit: 'Ghulam, Elite Ghulam', bonuses: ['Villagers +10 HP per age', 'Imperial Camels (unique upgrade)', 'Gunpowder units cost 25% less', 'Team Bonus: Camels +5 attack vs buildings'] },
-  { name: 'Huns',        abbr: 'Huns', unit: 'Tarkan, Elite Tarkan', bonuses: ['Do not need Houses (start with 0 pop space)', 'Cavalry Archers cost 10%/20% less (Castle/Imperial)', 'Trebuchets ±20% accuracy', 'Team Bonus: Stables work 20% faster'] },
-  { name: 'Incas',       abbr: 'Inca', unit: 'Kamayuk, Elite Kamayuk', bonuses: ['Start with a Llama', 'Villagers can garrison in Houses', 'Stone miners work 15% faster', 'Team Bonus: Farm upgrades free'] },
-  { name: 'Italians',    abbr: 'Ital', unit: 'Genoese Crossbowman, Elite Genoese Crossbowman', bonuses: ['Advance ages 15% cheaper', 'Fishing Ships cost 15% less', 'Gunpowder units cost 20% less', 'Team Bonus: Condottieri available in Barracks'] },
-  { name: 'Japanese',    abbr: 'Japa', unit: 'Samurai, Elite Samurai', bonuses: ['Fishermen work 5/10/15/20% faster per age', 'Galleys attack 33% faster', 'Infantry have +1/+2 attack (Feudal/Castle)', 'Team Bonus: Mills, Lumber Camps, Mining Camps cost 50% less'] },
-  { name: 'Khmer',       abbr: 'Khme', unit: 'Ballista Elephant, Elite Ballista Elephant', bonuses: ['Do not need Farms near Mills', 'Siege Elephants move 10% faster per upgrade', 'War Elephants move 10% faster', 'Team Bonus: Battering Rams contain 2x garrison space'] },
-  { name: 'Koreans',     abbr: 'Kore', unit: 'War Wagon, Elite War Wagon', bonuses: ['Stone miners work 20% faster', 'Tower upgrades free', 'Towers have +2 garrison', 'Team Bonus: Mangonel line has +1 range'] },
-  { name: 'Lithuanians', abbr: 'Lith', unit: 'Leitis, Elite Leitis', bonuses: ['Start with 150 extra food', 'Spearman-line +1 attack', 'Monasteries provide +5 pop each', 'Team Bonus: Relics give cavalry +1 attack (up to +4)'] },
-  { name: 'Magyars',     abbr: 'Magy', unit: 'Magyar Huszar, Elite Magyar Huszar', bonuses: ['Foragers work 15% faster', 'Scout Cavalry line free upgrades', 'Foot archers have +2 attack vs cavalry', 'Team Bonus: Blacksmith upgrades free'] },
-  { name: 'Malay',       abbr: 'Mala', unit: 'Karambit Warrior, Elite Karambit Warrior', bonuses: ['Advance ages 66% faster', 'Fish Traps provide unlimited food', 'Battleships cost 30% less', 'Team Bonus: Docks cost 25% less'] },
-  { name: 'Malians',     abbr: 'Mali', unit: 'Gbeto, Elite Gbeto', bonuses: ['Gold miners work 10% faster', 'Barracks units cost 20% less gold', 'Buildings +5 melee armor', 'Team Bonus: University techs 80% faster'] },
-  { name: 'Mayans',      abbr: 'Maya', unit: 'Plumed Archer, Elite Plumed Archer', bonuses: ['Start with an Eagle Scout', 'Resources last 15% longer', 'Archer cost -10/-20/-30% food per age', 'Team Bonus: Walls cost 50% less'] },
-  { name: 'Mongols',     abbr: 'Mong', unit: 'Mangudai, Elite Mangudai', bonuses: ['Cavalry Archers fire 25% faster', 'Scout Cavalry line +2 attack', 'Siege Workshop units +25% HP', 'Team Bonus: Light Cavalry have +30% HP'] },
-  { name: 'Persians',    abbr: 'Pers', unit: 'War Elephant, Elite War Elephant', bonuses: ['Start with +50 food and gold', 'TC and Docks work 10/15% faster (Feudal/Castle)', 'Cavalry have +2 attack vs archers', 'Team Bonus: Knights have +2 attack vs archers'] },
-  { name: 'Poles',       abbr: 'Pole', unit: 'Obuch, Elite Obuch', bonuses: ['Scouts can convert sheep', 'Mining villagers generate small gold trickle', 'Stone walls can be converted to Gold or Food', 'Team Bonus: Folwark collects farm food directly'] },
-  { name: 'Portuguese',  abbr: 'Port', unit: 'Organ Gun, Elite Organ Gun', bonuses: ['All units cost 15% less gold', 'Ships have +10% HP', 'Gunpowder units created 25% faster', 'Team Bonus: Cartography free and from start'] },
-  { name: 'Romans',      abbr: 'Roma', unit: 'Legionary, Centurion', bonuses: ['Infantry have +10% HP', 'Barracks work 20% faster', 'Legionary upgrade free', 'Team Bonus: Skirmishers +10% HP'] },
-  { name: 'Saracens',    abbr: 'Sara', unit: 'Mameluke, Elite Mameluke', bonuses: ['Market free, trade faster', 'Transport ships 2× capacity and 2× HP', 'Camel units have +10 HP', 'Team Bonus: Camels have +5 attack vs buildings'] },
-  { name: 'Sicilians',   abbr: 'Sici', unit: 'Serjeant, Elite Serjeant', bonuses: ['Advance ages 100% faster (but no other advantages)', 'Buildings +100% resistance to conversion', 'Serjeants can construct Donjons', 'Team Bonus: First Crusade enables foot units in buildings to act as Serjeants'] },
-  { name: 'Slavs',       abbr: 'Slav', unit: 'Boyar, Elite Boyar', bonuses: ['Farms +15% food', 'Military buildings cost 15% less', 'Supplies is free', 'Team Bonus: Siege Workshop works 20% faster'] },
-  { name: 'Spanish',     abbr: 'Span', unit: 'Conquistador, Elite Conquistador', bonuses: ['Building Wonders is 30% faster', 'Builders work 30% faster', 'Gunpowder units have no firing delay', 'Team Bonus: Trade units generate 33% more gold'] },
-  { name: 'Tatars',      abbr: 'Tata', unit: 'Keshik, Elite Keshik', bonuses: ['Herdable animals 50% more food', 'Cavalry Archers +2 attack', 'Sheep generate gold when near TC', 'Team Bonus: Cavalry Archers fire 25% faster'] },
-  { name: 'Teutons',     abbr: 'Teut', unit: 'Teutonic Knight, Elite Teutonic Knight', bonuses: ['Monks +5 conversion resistance', 'Towers can garrison 2× units', 'Murder Holes free', 'Team Bonus: Units resist conversion better'] },
-  { name: 'Turks',       abbr: 'Turk', unit: 'Janissary, Elite Janissary', bonuses: ['Gunpowder units +25% HP', 'Light Cavalry upgrade free', 'Gold miners work 15% faster', 'Team Bonus: Gunpowder research free'] },
-  { name: 'Vietnamese',  abbr: 'Viet', unit: 'Rattan Archer, Elite Rattan Archer', bonuses: ['Enemy technology researches are revealed', 'Archers have +20% HP', 'Lumber camp upgrades free', 'Team Bonus: Archers cost 20% less in Feudal Age'] },
-  { name: 'Vikings',     abbr: 'Viki', unit: 'Berserk, Elite Berserk', bonuses: ['Warships cost 15/20% less wood (Feudal/Castle)', 'Infantry have +10/15% HP (Feudal/Castle)', 'Wheelbarrow and Hand Cart free', 'Team Bonus: Docks cost 25% less'] },
-];
+    function selectCiv(civ, el) {
+      // Deselect old
+      document.querySelectorAll('.civ-shield.selected').forEach(s => s.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedCiv = civ;
 
-const BRITON_IDX = CIVS.findIndex(c => c.name === 'Britons');
+      document.getElementById('civ-name-display').textContent = civ.name;
+      document.getElementById('civ-unique-display').innerHTML =
+        '&#x2605; Unique Unit: ' + civ.unit;
 
-function renderCivGrid() {
-  const grid = document.getElementById('civ-grid');
-  CIVS.forEach((civ, i) => {
-    const el = document.createElement('div');
-    el.className = 'civ-shield' + (i === BRITON_IDX ? ' selected' : '');
-    el.title = civ.name;
-    el.innerHTML = `
-      <div class="civ-shield-inner"></div>
-      <span class="civ-name-abbr">${civ.abbr}</span>
-    `;
-    el.addEventListener('click', () => selectCiv(i));
-    grid.appendChild(el);
-  });
-}
-
-function selectCiv(idx) {
-  document.querySelectorAll('.civ-shield').forEach((el, i) => {
-    el.classList.toggle('selected', i === idx);
-  });
-  const civ = CIVS[idx];
-  document.getElementById('civ-info-name').textContent = civ.name;
-  document.getElementById('civ-info-unit').textContent = 'Unique Units: ' + civ.unit;
-  const ul = document.getElementById('civ-info-bonuses');
-  ul.innerHTML = civ.bonuses.map(b => `<li>${b}</li>`).join('');
-}
-
-renderCivGrid();
-</script>
+      const ul = document.getElementById('civ-bonuses-display');
+      ul.innerHTML = civ.bonuses.map(b => '<li>' + b + '</li>').join('');
+    }
+  </script>
 </body>
 </html>

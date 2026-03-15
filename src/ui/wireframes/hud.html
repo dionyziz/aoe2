@@ -1,543 +1,483 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HUD Wireframe — Age of Web</title>
-<style>
-/* ── Reset ── */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-button { background: none; border: none; font: inherit; color: inherit; cursor: pointer; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AoE Web — HUD Wireframe</title>
+  <style>
+    /* ── Google Fonts fallback — we use system fonts that approximate Cinzel ── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Design tokens (inlined) ── */
-:root {
-  --color-bg-darkest:          #0e0a04;
-  --color-bg-dark:             #1a1208;
-  --color-bg-medium:           #2d2010;
-  --color-bg-light:            #3d2f18;
-  --color-panel-bg:            rgba(18, 12, 4, 0.94);
-  --color-panel-border:        #5a4020;
-  --color-panel-border-bright: #8a6030;
-  --color-panel-inner:         rgba(40, 28, 10, 0.70);
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #1a2e0a;
+      font-family: 'Palatino Linotype', Georgia, serif;
+    }
 
-  --color-text-primary:   #e8d890;
-  --color-text-secondary: #b09060;
-  --color-text-muted:     #706040;
-  --color-parchment:      #e8d890;
-  --color-parchment-dim:  #b09060;
+    /* Simulated game terrain */
+    #game-canvas-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 300px 200px at 20% 60%, #2a4a10 0%, transparent 70%),
+        radial-gradient(ellipse 200px 150px at 70% 40%, #3a5a15 0%, transparent 60%),
+        radial-gradient(ellipse 250px 180px at 50% 75%, #1e3a0a 0%, transparent 65%),
+        radial-gradient(ellipse 120px 80px  at 85% 20%, #2e4e12 0%, transparent 55%),
+        linear-gradient(160deg, #1a2e08 0%, #243810 40%, #1e3208 70%, #162808 100%);
+    }
 
-  --color-gold:       #d4aa20;
-  --color-gold-light: #f0cc40;
-  --color-gold-dim:   #8a6e14;
+    /* ── Design token values inlined ─────────────────────────── */
+    /* bg: #0e0a04 / #1a1208 / #2d2010 / #3d2f18 */
+    /* panel-bg: rgba(18,12,4,0.94) */
+    /* border: #5a4020  border-bright: #8a6030  gold: #d4aa20 */
+    /* text-primary: #e8d890  text-secondary: #b09060  text-muted: #706040 */
+    /* text-bright: #f8f0b0 */
+    /* food: #d44030  wood: #5a8a2a  gold-res: #d4aa20  stone: #a0a0a0  pop: #80c0e0 */
+    /* hp-high: #48c840  hp-medium: #d8c020  hp-low: #c83020 */
 
-  --color-food:  #d44030;
-  --color-wood:  #5a8a2a;
-  --color-gold-r:#d4aa20;
-  --color-stone: #a0a0a0;
+    /* ── HUD root ─────────────────────────────────────────────── */
+    #hud {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
 
-  --color-hp-high:   #48c840;
-  --color-hp-medium: #d8c020;
-  --color-hp-low:    #c83020;
+    /* ── Top bar ──────────────────────────────────────────────── */
+    #hud-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 36px;
+      background: rgba(18, 12, 4, 0.94);
+      border-bottom: 2px solid #5a4020;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 16px;
+      pointer-events: auto;
+    }
 
-  --font-ui:   'Georgia', serif;
-  --font-body: 'Georgia', serif;
-  --font-mono: 'Courier New', monospace;
+    .resource-display {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 60px;
+      font-size: 12px;
+    }
 
-  --text-xs:  10px;
-  --text-sm:  12px;
-  --text-md:  14px;
-  --text-lg:  17px;
+    .resource-icon {
+      width: 16px; height: 16px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .resource-icon.food  { background: #d44030; }
+    .resource-icon.wood  { background: #5a8a2a; }
+    .resource-icon.gold  { background: #d4aa20; }
+    .resource-icon.stone { background: #a0a0a0; }
 
-  --sp-1: 4px;
-  --sp-2: 8px;
-  --sp-3: 12px;
-  --sp-4: 16px;
-  --sp-5: 24px;
-  --sp-6: 32px;
+    .resource-value { color: #f8f0b0; font-variant-numeric: tabular-nums; }
+    .resource-label { color: #706040; font-size: 10px; text-transform: uppercase; }
 
-  --hud-top-height:      36px;
-  --hud-bottom-height:   170px;
-  --hud-panel-width:     240px;
-  --hud-minimap-size:    200px;
-  --hud-action-btn-size: 48px;
-  --hud-action-cols:     5;
+    .pop-display {
+      display: flex;
+      gap: 4px;
+      font-size: 12px;
+      color: #80c0e0;
+      align-items: center;
+    }
+    .pop-icon { font-size: 13px; }
 
-  --border-panel:  2px solid var(--color-panel-border);
-  --border-bright: 1px solid var(--color-panel-border-bright);
-  --radius-sm: 3px;
-  --radius-md: 6px;
-  --radius-lg: 12px;
+    .age-display {
+      font-family: 'Palatino Linotype', Georgia, serif;
+      font-size: 12px;
+      color: #d4aa20;
+      letter-spacing: 0.05em;
+      margin-left: auto;
+    }
 
-  --shadow-panel: 0 4px 20px rgba(0,0,0,0.8);
-  --shadow-btn:   0 2px 8px  rgba(0,0,0,0.6);
-  --glow-gold:    0 0 12px   rgba(212,170,32,0.5);
-}
+    /* ── Minimap ──────────────────────────────────────────────── */
+    #minimap-panel {
+      position: absolute;
+      bottom: 170px;
+      right: 0;
+      width: 200px; height: 200px;
+      background: #0a1a0a;
+      border: 2px solid #5a4020;
+      border-bottom: none;
+      overflow: hidden;
+      cursor: crosshair;
+      pointer-events: auto;
+    }
 
-/* ── Layout ── */
-body {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-  background: #111;
-  font-family: var(--font-body);
-  color: var(--color-text-primary);
-  user-select: none;
-}
+    #minimap-canvas {
+      width: 100%; height: 100%;
+      display: block;
+    }
 
-#game-bg {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg,
-    #1a2a0a 0%,
-    #0f2008 25%,
-    #0a1808 50%,
-    #081a14 75%,
-    #0a1a10 100%);
-}
+    .minimap-viewport-rect {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,0.6);
+      pointer-events: none;
+      top: 30px; left: 20px;
+      width: 110px; height: 80px;
+    }
 
-/* Fake terrain grid for visual interest */
-#game-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 40px),
-    repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 40px);
-}
+    /* ── Bottom panel ─────────────────────────────────────────── */
+    #hud-bottom {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 170px;
+      display: flex;
+      background: rgba(18, 12, 4, 0.94);
+      border-top: 2px solid #5a4020;
+      pointer-events: auto;
+    }
 
-/* ── HUD root ── */
-#hud {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  font-family: var(--font-body);
-  color: var(--color-text-primary);
-  user-select: none;
-}
+    /* ── Selection panel ──────────────────────────────────────── */
+    #selection-panel {
+      width: 240px;
+      padding: 8px;
+      border-right: 2px solid #5a4020;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+    }
 
-/* ── Top bar ── */
-#hud-top {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: var(--hud-top-height);
-  background: var(--color-panel-bg);
-  border-bottom: var(--border-panel);
-  display: flex;
-  align-items: center;
-  padding: 0 var(--sp-3);
-  gap: var(--sp-4);
-  pointer-events: auto;
-}
+    .unit-header {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
 
-.resource-display {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-1);
-  font-size: var(--text-sm);
-  font-variant-numeric: tabular-nums;
-  min-width: 58px;
-}
+    .unit-portrait {
+      width: 64px; height: 64px;
+      background: #2d2010;
+      border: 2px solid #5a4020;
+      border-radius: 3px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: #8a6030;
+    }
 
-.resource-icon {
-  width: 16px; height: 16px;
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-.resource-icon.food  { background: var(--color-food); }
-.resource-icon.wood  { background: var(--color-wood); }
-.resource-icon.gold  { background: var(--color-gold-r); }
-.resource-icon.stone { background: var(--color-stone); }
+    .unit-info { flex: 1; min-width: 0; }
 
-.resource-value { color: var(--color-text-primary); }
+    .unit-name {
+      font-family: 'Palatino Linotype', Georgia, serif;
+      font-size: 14px;
+      color: #d4aa20;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-.pop-display {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-1);
-  font-size: var(--text-sm);
-  margin-left: auto;
-}
+    .hp-text {
+      font-size: 10px;
+      color: #b09060;
+      margin-top: 2px;
+    }
 
-.age-display {
-  font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  color: var(--color-gold);
-  letter-spacing: 0.05em;
-  border-left: var(--border-panel);
-  padding-left: var(--sp-3);
-  white-space: nowrap;
-}
+    .hp-bar-track {
+      height: 6px;
+      background: #1a1a1a;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
 
-/* ── Bottom bar ── */
-#hud-bottom {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: var(--hud-bottom-height);
-  display: flex;
-  background: var(--color-panel-bg);
-  border-top: var(--border-panel);
-}
+    .hp-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.15s;
+    }
+    .hp-bar-fill.high { background: #48c840; }
 
-/* ── Selection panel ── */
-#selection-panel {
-  width: var(--hud-panel-width);
-  padding: var(--sp-2);
-  border-right: var(--border-panel);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-1);
-  pointer-events: auto;
-  overflow: hidden;
-  flex-shrink: 0;
-}
+    .unit-stats {
+      display: flex;
+      gap: 10px;
+      font-size: 10px;
+      color: #b09060;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
 
-.unit-portrait {
-  width: 64px; height: 64px;
-  background: var(--color-panel-inner);
-  border: var(--border-panel);
-  border-radius: var(--radius-sm);
-  flex-shrink: 0;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-}
+    .stat-item { white-space: nowrap; }
+    .stat-label { color: #706040; }
 
-.unit-portrait::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 3px;
-  background: #1060d8; /* player 1 blue */
-}
+    /* ── Action panel ─────────────────────────────────────────── */
+    #action-panel {
+      flex: 1;
+      padding: 8px;
+      display: grid;
+      grid-template-columns: repeat(5, 48px);
+      grid-template-rows: repeat(3, 48px);
+      gap: 3px;
+      align-content: start;
+      justify-content: center;
+    }
 
-.unit-header {
-  display: flex;
-  gap: var(--sp-2);
-  align-items: flex-start;
-}
+    .action-btn {
+      width: 48px; height: 48px;
+      background: #2d2010;
+      border: 2px solid #5a4020;
+      border-radius: 3px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.1s, box-shadow 0.1s;
+    }
 
-.unit-info { flex: 1; min-width: 0; }
+    .action-btn:hover {
+      border-color: #d4aa20;
+      box-shadow: 0 0 12px rgba(212, 170, 32, 0.5);
+    }
 
-.unit-name {
-  font-family: var(--font-ui);
-  font-size: var(--text-md);
-  color: var(--color-gold);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: bold;
-}
+    .action-btn.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
 
-.hp-bar-track {
-  height: 6px;
-  background: #222;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  margin-top: var(--sp-1);
-}
+    .action-btn.disabled:hover {
+      border-color: #5a4020;
+      box-shadow: none;
+    }
 
-.hp-bar-fill {
-  height: 100%;
-  border-radius: var(--radius-sm);
-}
-.hp-bar-fill.high   { background: var(--color-hp-high); }
-.hp-bar-fill.medium { background: var(--color-hp-medium); }
-.hp-bar-fill.low    { background: var(--color-hp-low); }
+    .btn-icon {
+      width: 32px; height: 32px;
+      background: #3d2f18;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
 
-.hp-bar-label {
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-  margin-top: 2px;
-}
+    .hotkey {
+      position: absolute;
+      bottom: 3px; right: 4px;
+      font-size: 10px;
+      color: #706040;
+      font-family: 'Palatino Linotype', Georgia, serif;
+      line-height: 1;
+    }
 
-.unit-stats {
-  display: flex;
-  gap: var(--sp-3);
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-}
+    /* ── Drag rect ────────────────────────────────────────────── */
+    .drag-rect {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.05);
+      pointer-events: none;
+      top: 120px; left: 200px;
+      width: 180px; height: 100px;
+    }
 
-.stat-item { display: flex; align-items: center; gap: 2px; }
-.stat-label { color: var(--color-text-muted); }
+    /* ── FPS ──────────────────────────────────────────────────── */
+    .fps-display {
+      position: absolute;
+      top: 40px; right: 8px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.45);
+      pointer-events: none;
+      font-family: 'Courier New', monospace;
+    }
 
-/* ── Action panel ── */
-#action-panel {
-  flex: 1;
-  padding: var(--sp-2);
-  display: grid;
-  grid-template-columns: repeat(5, var(--hud-action-btn-size));
-  grid-template-rows: repeat(3, var(--hud-action-btn-size));
-  gap: 3px;
-  align-content: start;
-  justify-content: center;
-  pointer-events: auto;
-}
-
-.action-btn {
-  width: var(--hud-action-btn-size);
-  height: var(--hud-action-btn-size);
-  background: var(--color-panel-inner);
-  border: var(--border-panel);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color 0.1s, background 0.1s, box-shadow 0.1s;
-  color: var(--color-text-primary);
-  font-size: var(--text-xs);
-  flex-direction: column;
-  gap: 1px;
-}
-
-.action-btn:hover:not(.disabled) {
-  border-color: var(--color-gold);
-  background: rgba(60, 42, 14, 0.9);
-  box-shadow: var(--glow-gold);
-}
-
-.action-btn.disabled {
-  opacity: 0.2;
-  cursor: default;
-}
-
-.btn-icon {
-  width: 28px; height: 28px;
-  background: var(--color-panel-border);
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-}
-
-.action-btn .hotkey {
-  position: absolute;
-  bottom: 3px; right: 4px;
-  font-size: 9px;
-  color: var(--color-gold-dim);
-  font-weight: bold;
-  line-height: 1;
-}
-
-/* ── Minimap ── */
-#minimap-panel {
-  width: var(--hud-minimap-size);
-  height: var(--hud-minimap-size);
-  position: absolute;
-  bottom: var(--hud-bottom-height);
-  right: 0;
-  border: var(--border-panel);
-  border-bottom: none;
-  background: #0a1a0a;
-  pointer-events: auto;
-  cursor: crosshair;
-  overflow: hidden;
-  box-shadow: -2px -2px 8px rgba(0,0,0,0.6);
-}
-
-#minimap-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* ── Label overlay (wireframe helper) ── */
-.wf-label {
-  position: absolute;
-  background: rgba(0,0,0,0.5);
-  color: rgba(255,255,255,0.4);
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 3px;
-  pointer-events: none;
-  font-family: monospace;
-}
-</style>
+    /* ── Section label overlay (wireframe only) ───────────────── */
+    .wf-label {
+      position: absolute;
+      font-size: 9px;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Simulated game canvas -->
-<div id="game-bg"></div>
+  <!-- Simulated terrain background -->
+  <div id="game-canvas-bg"></div>
 
-<!-- Fake isometric terrain blobs -->
-<svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0.25" xmlns="http://www.w3.org/2000/svg">
-  <ellipse cx="30%" cy="40%" rx="12%" ry="6%" fill="#2d5a1e"/>
-  <ellipse cx="55%" cy="55%" rx="8%"  ry="4%" fill="#2d5a1e"/>
-  <ellipse cx="70%" cy="30%" rx="10%" ry="5%" fill="#1a4a14"/>
-  <ellipse cx="20%" cy="65%" rx="6%"  ry="3%" fill="#2d6fa6" opacity="0.6"/>
-  <ellipse cx="45%" cy="25%" rx="4%"  ry="5%" fill="#5a4020" opacity="0.4"/>
-</svg>
+  <!-- Drag selection rectangle (shown for demo) -->
+  <div class="drag-rect"></div>
 
-<!-- HUD overlay -->
-<div id="hud">
+  <!-- HUD root -->
+  <div id="hud">
 
-  <!-- TOP BAR -->
-  <div id="hud-top">
-    <div class="resource-display">
-      <div class="resource-icon food"></div>
-      <span class="resource-value">350</span>
+    <!-- Top resource bar -->
+    <div id="hud-top">
+      <!-- Food -->
+      <div class="resource-display">
+        <div class="resource-icon food"></div>
+        <span class="resource-value">350</span>
+      </div>
+      <!-- Wood -->
+      <div class="resource-display">
+        <div class="resource-icon wood"></div>
+        <span class="resource-value">220</span>
+      </div>
+      <!-- Gold -->
+      <div class="resource-display">
+        <div class="resource-icon gold"></div>
+        <span class="resource-value">80</span>
+      </div>
+      <!-- Stone -->
+      <div class="resource-display">
+        <div class="resource-icon stone"></div>
+        <span class="resource-value">0</span>
+      </div>
+      <!-- Population -->
+      <div class="pop-display">
+        <span class="pop-icon">&#x1F465;</span>
+        <span>14 / 100</span>
+      </div>
+      <!-- Age -->
+      <div class="age-display">&#x2694; Feudal Age</div>
     </div>
-    <div class="resource-display">
-      <div class="resource-icon wood"></div>
-      <span class="resource-value">220</span>
-    </div>
-    <div class="resource-display">
-      <div class="resource-icon gold"></div>
-      <span class="resource-value">80</span>
-    </div>
-    <div class="resource-display">
-      <div class="resource-icon stone"></div>
-      <span class="resource-value">0</span>
-    </div>
-    <div class="pop-display">
-      👥 14 / 100
-    </div>
-    <div class="age-display">⚔ Feudal Age</div>
-  </div>
 
-  <!-- BOTTOM BAR -->
-  <div id="hud-bottom">
+    <!-- FPS counter -->
+    <div class="fps-display">60 FPS</div>
 
-    <!-- SELECTION PANEL -->
-    <div id="selection-panel">
-      <div class="unit-header">
-        <div class="unit-portrait">🐴</div>
-        <div class="unit-info">
-          <div class="unit-name">Knight</div>
-          <div class="hp-bar-track">
-            <div class="hp-bar-fill high" style="width:80%"></div>
+    <!-- Minimap -->
+    <div id="minimap-panel">
+      <canvas id="minimap-canvas" width="200" height="200"></canvas>
+      <div class="minimap-viewport-rect"></div>
+    </div>
+
+    <!-- Bottom panel -->
+    <div id="hud-bottom">
+
+      <!-- Selection panel -->
+      <div id="selection-panel">
+        <div class="unit-header">
+          <div class="unit-portrait">&#x1F3C7;</div>
+          <div class="unit-info">
+            <div class="unit-name">Knight</div>
+            <div class="hp-text">96 / 120</div>
+            <div class="hp-bar-track">
+              <div class="hp-bar-fill high" style="width:80%"></div>
+            </div>
           </div>
-          <div class="hp-bar-label">96 / 120 HP</div>
+        </div>
+        <div class="unit-stats">
+          <span class="stat-item"><span class="stat-label">ATK </span>10</span>
+          <span class="stat-item"><span class="stat-label">ARM </span>2/3</span>
+          <span class="stat-item"><span class="stat-label">LOS </span>4</span>
+          <span class="stat-item"><span class="stat-label">SPD </span>1.35</span>
         </div>
       </div>
-      <div class="unit-stats">
-        <span class="stat-item"><span class="stat-label">ATK</span>&nbsp;10</span>
-        <span class="stat-item"><span class="stat-label">ARM</span>&nbsp;2/3</span>
-        <span class="stat-item"><span class="stat-label">LOS</span>&nbsp;4</span>
-        <span class="stat-item"><span class="stat-label">SPD</span>&nbsp;1.35</span>
+
+      <!-- Action panel -->
+      <div id="action-panel">
+        <!-- Row 1 -->
+        <div class="action-btn" title="Move">
+          <div class="btn-icon">&#x27A1;</div>
+          <span class="hotkey">M</span>
+        </div>
+        <div class="action-btn" title="Stop">
+          <div class="btn-icon">&#x23F9;</div>
+          <span class="hotkey">S</span>
+        </div>
+        <div class="action-btn" title="Attack">
+          <div class="btn-icon">&#x2694;</div>
+          <span class="hotkey">A</span>
+        </div>
+        <div class="action-btn" title="Patrol">
+          <div class="btn-icon">&#x21BA;</div>
+          <span class="hotkey">P</span>
+        </div>
+        <div class="action-btn" title="Guard">
+          <div class="btn-icon">&#x1F6E1;</div>
+          <span class="hotkey">G</span>
+        </div>
+        <!-- Row 2 -->
+        <div class="action-btn" title="Stance">
+          <div class="btn-icon">&#x26A1;</div>
+          <span class="hotkey">Q</span>
+        </div>
+        <!-- Empty / disabled slots -->
+        <div class="action-btn disabled"></div>
+        <div class="action-btn disabled"></div>
+        <div class="action-btn disabled"></div>
+        <div class="action-btn disabled"></div>
+        <!-- Row 3 — all empty -->
+        <div class="action-btn disabled"></div>
+        <div class="action-btn disabled"></div>
+        <div class="action-btn disabled"></div>
+        <div class="action-btn disabled"></div>
+        <div class="action-btn disabled"></div>
       </div>
-    </div>
 
-    <!-- ACTION PANEL -->
-    <div id="action-panel">
-      <!-- Row 1: Movement / combat actions -->
-      <button class="action-btn" title="Move (M)">
-        <div class="btn-icon">🏃</div>
-        <span class="hotkey">M</span>
-      </button>
-      <button class="action-btn" title="Stop (S)">
-        <div class="btn-icon">✋</div>
-        <span class="hotkey">S</span>
-      </button>
-      <button class="action-btn" title="Attack (A)">
-        <div class="btn-icon">⚔</div>
-        <span class="hotkey">A</span>
-      </button>
-      <button class="action-btn" title="Patrol (P)">
-        <div class="btn-icon">🔄</div>
-        <span class="hotkey">P</span>
-      </button>
-      <button class="action-btn" title="Guard (G)">
-        <div class="btn-icon">🛡</div>
-        <span class="hotkey">G</span>
-      </button>
+    </div><!-- #hud-bottom -->
+  </div><!-- #hud -->
 
-      <!-- Row 2: Stance, rest empty -->
-      <button class="action-btn" title="Stance (Q)">
-        <div class="btn-icon">⚑</div>
-        <span class="hotkey">Q</span>
-      </button>
-      <button class="action-btn disabled"></button>
-      <button class="action-btn disabled"></button>
-      <button class="action-btn disabled"></button>
-      <button class="action-btn disabled"></button>
+  <script>
+    // ── Draw minimap ────────────────────────────────────────────
+    const canvas = document.getElementById('minimap-canvas');
+    const ctx = canvas.getContext('2d');
 
-      <!-- Row 3: all empty -->
-      <button class="action-btn disabled"></button>
-      <button class="action-btn disabled"></button>
-      <button class="action-btn disabled"></button>
-      <button class="action-btn disabled"></button>
-      <button class="action-btn disabled"></button>
-    </div>
+    // Terrain base
+    ctx.fillStyle = '#0a1a0a';
+    ctx.fillRect(0, 0, 200, 200);
 
-  </div><!-- /#hud-bottom -->
+    // Terrain patches — forests
+    const forests = [
+      [10, 10, 40, 35], [120, 5, 55, 30], [5, 90, 30, 50],
+      [160, 130, 35, 40], [70, 155, 45, 35], [140, 60, 25, 20]
+    ];
+    ctx.fillStyle = '#1a3a0a';
+    forests.forEach(([x, y, w, h]) => {
+      ctx.beginPath();
+      ctx.ellipse(x + w/2, y + h/2, w/2, h/2, 0, 0, Math.PI * 2);
+      ctx.fill();
+    });
 
-  <!-- MINIMAP -->
-  <div id="minimap-panel">
-    <canvas id="minimap-canvas" width="200" height="200"></canvas>
-  </div>
-
-</div><!-- /#hud -->
-
-<!-- Wireframe annotation labels -->
-<div class="wf-label" style="top:40px; left:10px">selection-panel</div>
-<div class="wf-label" style="top:40px; left:260px">action-panel (5×3 grid)</div>
-<div class="wf-label" style="bottom:175px; right:5px">minimap (200×200)</div>
-
-<script>
-(function () {
-  const canvas = document.getElementById('minimap-canvas');
-  const ctx = canvas.getContext('2d');
-  const W = 200, H = 200;
-
-  // Base terrain
-  ctx.fillStyle = '#0a1a08';
-  ctx.fillRect(0, 0, W, H);
-
-  // Forest patches
-  [[60, 30, 35, 22], [120, 80, 25, 18], [30, 120, 20, 15]].forEach(([x, y, w, h]) => {
-    ctx.fillStyle = '#1a4a10';
+    // Water patch
+    ctx.fillStyle = '#0a1e3a';
     ctx.beginPath();
-    ctx.ellipse(x, y, w, h, 0, 0, Math.PI * 2);
+    ctx.ellipse(170, 50, 25, 18, 0.3, 0, Math.PI * 2);
     ctx.fill();
-  });
 
-  // Water patch
-  ctx.fillStyle = '#1a3a6a';
-  ctx.beginPath();
-  ctx.ellipse(155, 50, 22, 14, 0.3, 0, Math.PI * 2);
-  ctx.fill();
+    // Open ground patches
+    ctx.fillStyle = '#183010';
+    const grounds = [[50, 40, 80, 60], [90, 110, 70, 50]];
+    grounds.forEach(([x, y, w, h]) => {
+      ctx.fillRect(x, y, w, h);
+    });
 
-  // Gold deposits (yellowish)
-  ctx.fillStyle = '#6a5800';
-  ctx.fillRect(90, 140, 8, 8);
-
-  // Own buildings (grey squares)
-  [[38, 82, '#888'], [44, 82, '#888'], [50, 82, '#888']].forEach(([x, y, c]) => {
-    ctx.fillStyle = c;
-    ctx.fillRect(x, y, 5, 5);
-  });
-
-  // Player 1 (blue) units
-  [
-    [40, 60], [43, 64], [37, 67], [50, 58],
-  ].forEach(([x, y]) => {
+    // Player 1 units (blue — player-0)
     ctx.fillStyle = '#1060d8';
-    ctx.beginPath();
-    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-    ctx.fill();
-  });
+    [[55, 85], [60, 90], [65, 85], [70, 90], [58, 80]].forEach(([x, y]) => {
+      ctx.beginPath();
+      ctx.arc(x, y, 2, 0, Math.PI * 2);
+      ctx.fill();
+    });
 
-  // Player 2 (red) enemy units
-  [
-    [155, 145], [160, 150], [150, 148],
-  ].forEach(([x, y]) => {
+    // Town center dot
+    ctx.fillStyle = '#3090ff';
+    ctx.beginPath();
+    ctx.arc(62, 87, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Player 2 units (red — player-1) — enemy (visible through fog)
     ctx.fillStyle = '#d82020';
-    ctx.beginPath();
-    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-    ctx.fill();
-  });
+    [[130, 140], [135, 145], [140, 140]].forEach(([x, y]) => {
+      ctx.beginPath();
+      ctx.arc(x, y, 2, 0, Math.PI * 2);
+      ctx.fill();
+    });
 
-  // Viewport rectangle
-  ctx.strokeStyle = 'rgba(255,255,255,0.65)';
-  ctx.lineWidth = 1;
-  ctx.strokeRect(20, 45, 90, 70);
-})();
-</script>
+    // Fog of war — darker regions
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(0, 0, 50, 50);
+    ctx.fillRect(0, 140, 60, 60);
+    ctx.fillRect(170, 0, 30, 130);
+  </script>
 </body>
 </html>

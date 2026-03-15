@@ -1,27 +1,20 @@
-/* Age of Web — HUD CSS
- * Overlays the game canvas. The root element uses pointer-events:none so
- * mouse events fall through to the canvas by default; only interactive
- * children opt back in with pointer-events:auto.
- */
+/* =============================================================
+   AoE Web — HUD Styles
+   ============================================================= */
 
 @import './design-tokens.css';
 
-/* ─────────────────────────────────────────────────────────────
-   Root overlay
-   ───────────────────────────────────────────────────────────── */
+/* ── Root overlay ───────────────────────────────────────────── */
+
 #hud {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  font-family: var(--font-body);
-  color: var(--color-text-primary);
-  user-select: none;
-  z-index: var(--z-hud);
+  z-index: 10;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Top resource bar (36px)
-   ───────────────────────────────────────────────────────────── */
+/* ── Top resource bar ───────────────────────────────────────── */
+
 #hud-top {
   position: absolute;
   top: 0;
@@ -31,20 +24,19 @@
   background: var(--color-panel-bg);
   border-bottom: var(--border-panel);
   display: flex;
+  flex-direction: row;
   align-items: center;
   padding: 0 var(--sp-3);
   gap: var(--sp-4);
   pointer-events: auto;
 }
 
-/* Individual resource counter */
 .resource-display {
   display: flex;
   align-items: center;
   gap: var(--sp-1);
+  min-width: 60px;
   font-size: var(--text-sm);
-  font-variant-numeric: tabular-nums;
-  min-width: 58px;
 }
 
 .resource-icon {
@@ -53,69 +45,42 @@
   border-radius: 2px;
   flex-shrink: 0;
 }
-.resource-icon.food  { background: var(--color-food);  }
-.resource-icon.wood  { background: var(--color-wood);  }
-.resource-icon.gold  { background: var(--color-gold-r); }
-.resource-icon.stone { background: var(--color-stone); }
+
+.resource-icon.food   { background: var(--color-food); }
+.resource-icon.wood   { background: var(--color-wood); }
+.resource-icon.gold   { background: var(--color-gold); }
+.resource-icon.stone  { background: var(--color-stone); }
 
 .resource-value {
-  color: var(--color-text-primary);
+  color: var(--color-text-bright);
+  font-variant-numeric: tabular-nums;
 }
 
-/* Floating delta animation (+N / -N near icon) */
-.resource-delta {
-  position: absolute;
-  font-size: var(--text-xs);
-  font-weight: bold;
-  pointer-events: none;
-  animation: delta-fade 2s ease-out forwards;
-}
-.resource-delta.gain { color: var(--color-hp-high); }
-.resource-delta.loss { color: var(--color-hp-low);  }
-
-@keyframes delta-fade {
-  0%   { opacity: 1; transform: translateY(0);     }
-  100% { opacity: 0; transform: translateY(-20px);  }
+.resource-value.low {
+  color: var(--color-hp-low);
 }
 
-/* Population display */
 .pop-display {
   display: flex;
-  align-items: center;
   gap: var(--sp-1);
   font-size: var(--text-sm);
-  margin-left: auto;
+  color: var(--color-population);
 }
+
 .pop-display.at-cap {
   color: var(--color-hp-low);
 }
-.pop-warning {
-  color: var(--color-hp-low);
-  font-weight: bold;
-}
 
-/* Age display */
 .age-display {
   font-family: var(--font-ui);
   font-size: var(--text-sm);
   color: var(--color-gold);
   letter-spacing: 0.05em;
-  border-left: var(--border-panel);
-  padding-left: var(--sp-3);
-  white-space: nowrap;
+  margin-left: auto;
 }
 
-/* FPS counter (dev mode) */
-#fps-counter {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  margin-left: var(--sp-3);
-}
+/* ── Bottom panel ────────────────────────────────────────────── */
 
-/* ─────────────────────────────────────────────────────────────
-   Bottom container (170px)
-   ───────────────────────────────────────────────────────────── */
 #hud-bottom {
   position: absolute;
   bottom: 0;
@@ -125,44 +90,37 @@
   display: flex;
   background: var(--color-panel-bg);
   border-top: var(--border-panel);
+  pointer-events: auto;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Selection panel — left zone (240px wide)
-   ───────────────────────────────────────────────────────────── */
+/* ── Selection panel ─────────────────────────────────────────── */
+
 #selection-panel {
   width: var(--hud-panel-width);
   padding: var(--sp-2);
   border-right: var(--border-panel);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-1);
-  pointer-events: auto;
+  gap: var(--sp-2);
   overflow: hidden;
-  flex-shrink: 0;
 }
 
-/* ── Single unit view ── */
 .unit-portrait {
   width: 64px;
   height: 64px;
-  background: var(--color-panel-inner);
+  background: var(--color-bg-medium);
   border: var(--border-panel);
   border-radius: var(--radius-sm);
   flex-shrink: 0;
-  overflow: hidden;
-  position: relative;
 }
 
-/* Player-color strip along bottom of portrait */
-.unit-portrait::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--player-color, var(--player-1));
+.unit-name {
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  color: var(--color-gold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .unit-header {
@@ -176,25 +134,6 @@
   min-width: 0;
 }
 
-.unit-name {
-  font-family: var(--font-ui);
-  font-size: var(--text-md);
-  color: var(--color-gold);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.unit-task {
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 1px;
-}
-
-/* HP bar */
 .hp-bar-track {
   height: 6px;
   background: #222;
@@ -206,68 +145,41 @@
 .hp-bar-fill {
   height: 100%;
   border-radius: var(--radius-sm);
-  transition: width 0.15s ease, background-color 0.3s ease;
-}
-.hp-bar-fill.high   { background: var(--color-hp-high);   }
-.hp-bar-fill.medium { background: var(--color-hp-medium); }
-.hp-bar-fill.low    { background: var(--color-hp-low);    }
-
-.hp-bar-label {
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-  margin-top: 1px;
-  font-variant-numeric: tabular-nums;
-}
-
-/* Construction progress bar (replaces HP bar while building) */
-.construction-bar-track {
-  height: 6px;
-  background: #222;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  margin-top: var(--sp-1);
-}
-.construction-bar-fill {
-  height: 100%;
-  background: var(--color-gold-dim);
-  border-radius: var(--radius-sm);
   transition: width 0.15s ease;
 }
 
-/* Unit stat row */
+.hp-bar-fill.high   { background: var(--color-hp-high); }
+.hp-bar-fill.medium { background: var(--color-hp-medium); }
+.hp-bar-fill.low    { background: var(--color-hp-low); }
+
 .unit-stats {
   display: flex;
   gap: var(--sp-3);
   font-size: var(--text-xs);
   color: var(--color-text-secondary);
-  flex-wrap: wrap;
 }
-.stat-item {
-  display: flex;
-  align-items: center;
+
+/* Multi-select grid */
+.multi-select-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
   gap: 2px;
 }
-.stat-label {
-  color: var(--color-text-muted);
-  font-variant-numeric: tabular-nums;
+
+.multi-unit-thumb {
+  width: 28px;
+  height: 28px;
+  background: var(--color-bg-medium);
+  border: 1px solid var(--color-panel-border);
+  border-radius: 2px;
+  cursor: pointer;
 }
 
-/* Villager carrying resource */
-.carrying-display {
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-  display: flex;
-  align-items: center;
-  gap: var(--sp-1);
+.multi-unit-thumb:hover {
+  border-color: var(--color-gold);
 }
 
-/* Building garrison info */
-.garrison-display {
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-}
-
-/* ── Train queue ── */
+/* Train queue */
 .train-queue {
   display: flex;
   gap: 3px;
@@ -277,99 +189,42 @@
 .queue-slot {
   width: 32px;
   height: 32px;
-  background: var(--color-panel-inner);
+  background: var(--color-bg-medium);
   border: var(--border-panel);
   border-radius: var(--radius-sm);
   position: relative;
-  cursor: context-menu; /* right-click to cancel */
-  overflow: hidden;
 }
 
 .queue-slot.active {
   border-color: var(--color-gold);
 }
 
-/* Circular progress arc is drawn on a canvas child — CSS only handles the bar fallback */
-.queue-progress-bar {
+.queue-progress {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 3px;
   background: var(--color-gold);
-  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-  transform-origin: left center;
 }
 
-/* ── Multi-select grid (2–40 units) ── */
-.multi-select-grid {
-  display: grid;
-  grid-template-columns: repeat(8, 28px);
-  gap: 2px;
-  align-content: start;
-  overflow-y: auto;
-  max-height: 130px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-gold-dim) transparent;
-}
+/* ── Action grid ─────────────────────────────────────────────── */
 
-.multi-unit-thumb {
-  width: 28px;
-  height: 28px;
-  background: var(--color-panel-inner);
-  border: 1px solid var(--color-panel-border);
-  border-radius: 2px;
-  cursor: pointer;
-  pointer-events: auto;
-  position: relative;
-  overflow: hidden;
-}
-.multi-unit-thumb:hover {
-  border-color: var(--color-gold);
-}
-.multi-unit-thumb.focused {
-  border-color: var(--color-gold);
-  box-shadow: 0 0 4px var(--color-gold);
-}
-
-/* HP pip under each thumb in multi-select */
-.multi-unit-thumb::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  width: var(--hp-pct, 100%);
-  background: var(--color-hp-high);
-}
-
-/* 40+ units label */
-.multi-select-overflow {
-  font-family: var(--font-ui);
-  font-size: var(--text-md);
-  color: var(--color-text-secondary);
-  padding: var(--sp-2);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   Action panel — center zone
-   ───────────────────────────────────────────────────────────── */
 #action-panel {
   flex: 1;
   padding: var(--sp-2);
   display: grid;
-  grid-template-columns: repeat(var(--hud-action-cols), var(--hud-action-btn-size));
+  grid-template-columns: repeat(5, var(--hud-action-btn-size));
   grid-template-rows: repeat(3, var(--hud-action-btn-size));
   gap: 3px;
   align-content: start;
   justify-content: center;
-  pointer-events: auto;
 }
 
 .action-btn {
   width: var(--hud-action-btn-size);
   height: var(--hud-action-btn-size);
-  background: var(--color-panel-inner);
+  background: var(--color-bg-medium);
   border: var(--border-panel);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -377,165 +232,109 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.1s ease, background 0.1s ease, box-shadow 0.1s ease;
-  color: var(--color-text-primary);
-  font-size: var(--text-sm);
-  padding: 0;
+  transition: border-color 0.1s ease, box-shadow 0.1s ease;
 }
 
-.action-btn:hover:not(.disabled):not(:disabled) {
+.action-btn:hover {
   border-color: var(--color-gold);
-  background: rgba(60, 42, 14, 0.90);
   box-shadow: var(--glow-gold);
 }
 
-.action-btn:active:not(.disabled):not(:disabled) {
-  background: rgba(80, 56, 18, 0.90);
+.action-btn:active {
+  background: var(--color-bg-light);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.action-btn.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.action-btn.disabled:hover {
+  border-color: var(--color-panel-border);
   box-shadow: none;
 }
 
-.action-btn:focus-visible {
-  outline: 2px solid var(--color-gold);
-  outline-offset: 1px;
-}
-
-.action-btn.disabled,
-.action-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* Icon placeholder (colored square until real art ships) */
-.btn-icon {
-  width: 32px;
-  height: 32px;
-  background: var(--color-panel-border);
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-
-/* Hotkey badge */
 .action-btn .hotkey {
   position: absolute;
   bottom: 3px;
   right: 4px;
   font-size: var(--text-xs);
-  color: var(--color-gold-dim);
+  color: var(--color-text-muted);
   font-family: var(--font-ui);
-  font-weight: 600;
   line-height: 1;
   pointer-events: none;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Minimap panel — right, floats above bottom bar
-   ───────────────────────────────────────────────────────────── */
+.action-btn .btn-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--color-bg-light);
+  border-radius: 2px;
+}
+
+/* ── Minimap ─────────────────────────────────────────────────── */
+
 #minimap-panel {
-  width: var(--hud-minimap-size);
-  height: var(--hud-minimap-size);
   position: absolute;
   bottom: var(--hud-bottom-height);
   right: 0;
+  width: var(--hud-minimap-size);
+  height: var(--hud-minimap-size);
+  background: #0a1a0a;
   border: var(--border-panel);
   border-bottom: none;
-  background: #0a1a0a;
-  pointer-events: auto;
-  cursor: crosshair;
   overflow: hidden;
-  box-shadow: -2px -2px 8px rgba(0, 0, 0, 0.6);
+  cursor: crosshair;
+  pointer-events: auto;
 }
 
 #minimap-canvas {
-  display: block;
   width: 100%;
   height: 100%;
+  display: block;
 }
 
-/* Viewport rectangle drawn in JS but this class can be used for a CSS fallback */
 .minimap-viewport {
   position: absolute;
-  border: 1px solid rgba(255, 255, 255, 0.60);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   pointer-events: none;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Drag-select rectangle
-   ───────────────────────────────────────────────────────────── */
-#drag-select-rect {
+/* ── Drag selection rectangle ───────────────────────────────── */
+
+.drag-rect {
   position: absolute;
-  border: 1px solid rgba(100, 200, 255, 0.80);
-  background: rgba(100, 200, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.05);
   pointer-events: none;
-  display: none;
-}
-#drag-select-rect.active {
-  display: block;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Tooltip (300ms hover delay, managed by JS)
-   ───────────────────────────────────────────────────────────── */
-#hud-tooltip {
-  position: absolute;
+/* ── Tooltip ────────────────────────────────────────────────── */
+
+.tooltip {
+  position: fixed;
   background: var(--color-panel-bg);
-  border: var(--border-bright);
-  border-radius: var(--radius-md);
+  border: var(--border-panel);
+  border-radius: var(--radius-sm);
   padding: var(--sp-2) var(--sp-3);
   font-size: var(--text-sm);
-  color: var(--color-text-primary);
-  max-width: 220px;
+  max-width: 240px;
+  z-index: 100;
   pointer-events: none;
-  z-index: var(--z-tooltip);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
   box-shadow: var(--shadow-panel);
-  display: none;
-}
-#hud-tooltip.visible {
-  display: block;
-}
-.tooltip-name {
-  font-family: var(--font-ui);
-  font-size: var(--text-md);
-  color: var(--color-gold);
-  margin-bottom: 2px;
-}
-.tooltip-cost {
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-  margin-bottom: 3px;
-  display: flex;
-  gap: var(--sp-2);
-}
-.tooltip-desc {
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-  line-height: 1.4;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Age-up banner
-   ───────────────────────────────────────────────────────────── */
-#age-up-banner {
+/* ── FPS display ────────────────────────────────────────────── */
+
+.fps-display {
   position: absolute;
-  top: calc(var(--hud-top-height) + var(--sp-4));
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--color-panel-bg);
-  border: 2px solid var(--color-gold);
-  border-radius: var(--radius-md);
-  padding: var(--sp-2) var(--sp-5);
-  font-family: var(--font-ui);
-  font-size: var(--text-lg);
-  color: var(--color-gold-light);
-  text-align: center;
-  box-shadow: var(--glow-gold), var(--shadow-panel);
+  top: calc(var(--hud-top-height) + 4px);
+  right: 8px;
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.5);
   pointer-events: none;
-  display: none;
-  white-space: nowrap;
+  font-family: var(--font-mono);
 }
-#age-up-banner.visible {
-  display: block;
-  animation: banner-fadein 0.4s ease, banner-fadeout 0.5s ease 4.5s forwards;
-}
-@keyframes banner-fadein  { from { opacity: 0; transform: translateX(-50%) scale(0.9); } to { opacity: 1; transform: translateX(-50%) scale(1); } }
-@keyframes banner-fadeout { from { opacity: 1; } to { opacity: 0; } }

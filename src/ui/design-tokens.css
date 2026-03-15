@@ -1,63 +1,60 @@
-/* Age of Web — Design Tokens
- * Single source of truth for the entire visual language.
- * Import this file at the top of every other CSS module.
- */
-
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
+/* =============================================================
+   AoE Web — Design Tokens
+   Dark medieval aesthetic
+   ============================================================= */
 
 :root {
-  /* ── BACKGROUNDS ── */
-  --color-bg-darkest:          #0e0a04;
-  --color-bg-dark:             #1a1208;
-  --color-bg-medium:           #2d2010;
-  --color-bg-light:            #3d2f18;
-  --color-panel-bg:            rgba(18, 12, 4, 0.94);
-  --color-panel-border:        #5a4020;
-  --color-panel-border-bright: #8a6030;
-  --color-panel-inner:         rgba(40, 28, 10, 0.70);
 
-  /* ── TEXT ── */
-  --color-text-primary:   #e8d890;   /* parchment — default readable text */
-  --color-text-secondary: #b09060;   /* dimmed parchment — secondary info  */
-  --color-text-muted:     #706040;   /* very dim — labels, stat keys       */
+  /* ── Background colours ─────────────────────────────────── */
+  --color-bg-darkest:         #0e0a04;
+  --color-bg-dark:            #1a1208;
+  --color-bg-medium:          #2d2010;
+  --color-bg-light:           #3d2f18;
+  --color-panel-bg:           rgba(18, 12, 4, 0.94);
+  --color-panel-border:       #5a4020;
+  --color-panel-border-bright:#8a6030;
+  --color-panel-border-gold:  #c8921a;
 
-  /* Aliases kept for cross-file compatibility */
-  --color-parchment:     var(--color-text-primary);
-  --color-parchment-dim: var(--color-text-secondary);
+  /* ── Text ───────────────────────────────────────────────── */
+  --color-text-primary:       #e8d890;
+  --color-text-secondary:     #b09060;
+  --color-text-muted:         #706040;
+  --color-text-bright:        #f8f0b0;
 
-  /* ── ACCENT ── */
-  --color-gold:       #d4aa20;
-  --color-gold-light: #f0cc40;
-  --color-gold-dim:   #8a6e14;
+  /* ── Resources ──────────────────────────────────────────── */
+  --color-food:               #d44030;
+  --color-wood:               #5a8a2a;
+  --color-gold:               #d4aa20;
+  --color-stone:              #a0a0a0;
+  --color-population:         #80c0e0;
 
-  /* ── RESOURCE COLORS ── */
-  --color-food:  #d44030;
-  --color-wood:  #5a8a2a;
-  --color-gold-r:#d4aa20;   /* alias so 'gold' token isn't ambiguous */
-  --color-stone: #a0a0a0;
+  /* ── HP colours ─────────────────────────────────────────── */
+  --color-hp-high:            #48c840;
+  --color-hp-medium:          #d8c020;
+  --color-hp-low:             #c83020;
+  --color-hp-bg:              #1a1a1a;
 
-  /* ── HP BAR ── */
-  --color-hp-high:   #48c840;
-  --color-hp-medium: #d8c020;
-  --color-hp-low:    #c83020;
+  /* ── Player colours (0–7) ───────────────────────────────── */
+  --player-0:                 #1060d8;
+  --player-1:                 #d82020;
+  --player-2:                 #20a820;
+  --player-3:                 #d8c020;
+  --player-4:                 #18b8a0;
+  --player-5:                 #a020c0;
+  --player-6:                 #909090;
+  --player-7:                 #d87820;
 
-  /* ── PLAYER COLORS (index 0 = Gaia/white, 1-8 as per spec) ── */
-  --player-0: #ffffff;
-  --player-1: #0055ff;
-  --player-2: #ff0000;
-  --player-3: #00aa00;
-  --player-4: #ffdd00;
-  --player-5: #00aaaa;
-  --player-6: #aa00aa;
-  --player-7: #888888;
-  --player-8: #ff6600;
+  /* ── Age colours ────────────────────────────────────────── */
+  --age-dark:                 #808080;
+  --age-feudal:               #c08040;
+  --age-castle:               #8090c0;
+  --age-imperial:             #d0a820;
 
-  /* ── TYPOGRAPHY ── */
-  --font-ui:   'Cinzel', 'Palatino Linotype', Georgia, serif;
-  --font-body: 'Book Antiqua', 'Palatino Linotype', Georgia, serif;
-  --font-mono: 'Courier New', Courier, monospace;
+  /* ── Typography ─────────────────────────────────────────── */
+  --font-ui:    'Cinzel', 'Palatino Linotype', Georgia, serif;
+  --font-body:  'Book Antiqua', Georgia, serif;
+  --font-mono:  'Courier New', monospace;
 
-  /* Type scale */
   --text-xs:    10px;
   --text-sm:    12px;
   --text-md:    14px;
@@ -66,7 +63,7 @@
   --text-2xl:   30px;
   --text-title: 48px;
 
-  /* ── SPACING (4-point grid) ── */
+  /* ── Spacing ─────────────────────────────────────────────── */
   --sp-1: 4px;
   --sp-2: 8px;
   --sp-3: 12px;
@@ -74,31 +71,21 @@
   --sp-5: 24px;
   --sp-6: 32px;
 
-  /* ── HUD LAYOUT ── */
-  --hud-top-height:      36px;
-  --hud-bottom-height:   170px;
-  --hud-panel-width:     240px;
-  --hud-minimap-size:    200px;
-  --hud-action-btn-size: 48px;
-  --hud-action-cols:     5;
+  /* ── HUD dimensions ──────────────────────────────────────── */
+  --hud-top-height:     36px;
+  --hud-bottom-height:  170px;
+  --hud-panel-width:    240px;
+  --hud-minimap-size:   200px;
+  --hud-action-btn-size:48px;
 
-  /* ── BORDERS ── */
-  --border-panel:  2px solid var(--color-panel-border);
-  --border-bright: 1px solid var(--color-panel-border-bright);
-  --radius-sm: 3px;
-  --radius-md: 6px;
-  --radius-lg: 12px;
+  /* ── Borders & radii ─────────────────────────────────────── */
+  --border-panel: 2px solid var(--color-panel-border);
+  --radius-sm:    3px;
+  --radius-md:    6px;
+  --radius-lg:    12px;
 
-  /* ── SHADOWS / GLOWS ── */
-  --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.80);
-  --shadow-btn:   0 2px 8px  rgba(0, 0, 0, 0.60);
-  --glow-gold:    0 0 12px   rgba(212, 170, 32, 0.50);
-  --glow-hp:      0 0 6px    rgba(72, 200, 64, 0.40);
+  /* ── Shadows & glows ─────────────────────────────────────── */
+  --shadow-panel: 0 4px 20px rgba(0, 0, 0, 0.8);
+  --glow-gold:    0 0 12px rgba(212, 170, 32, 0.5);
 
-  /* ── Z-INDEX LAYERS ── */
-  --z-canvas:    0;
-  --z-hud:      10;
-  --z-tooltip:  20;
-  --z-menu:     30;
-  --z-overlay:  40;
 }

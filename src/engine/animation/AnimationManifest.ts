@@ -32,6 +32,7 @@ export type StandardUnitId = typeof STANDARD_UNIT_IDS[number];
 /**
  * Build animation definitions for a single unit.
  * Returns: idle, walk, attack, die
+ * FPS spec: walk=15, idle=8, attack=15, die=8
  */
 function buildUnitAnims(unitId: string): Record<string, AnimationDef> {
   const isSiege = ['battering_ram','capped_ram','siege_ram','siege_tower',
@@ -42,21 +43,25 @@ function buildUnitAnims(unitId: string): Record<string, AnimationDef> {
 
   return {
     [`${unitId}_idle`]: {
-      directions: 8, fps: 6, loop: true, frameCount: 6,
+      id: `${unitId}_idle`,
+      directions: 8, fps: 8, loop: true, frameCount: 6,
       frameKeys: buildFrameKeys(unitId, 'idle', 8, 6),
     },
     [`${unitId}_walk`]: {
+      id: `${unitId}_walk`,
       directions: 8, fps: 15, loop: true,
       frameCount: isShip ? 8 : (isSiege ? 8 : 10),
       frameKeys: buildFrameKeys(unitId, 'walk', 8, isShip ? 8 : (isSiege ? 8 : 10)),
     },
     [`${unitId}_attack`]: {
+      id: `${unitId}_attack`,
       directions: 8, fps: 15, loop: false,
       frameCount: isSiege ? 10 : 8,
       frameKeys: buildFrameKeys(unitId, 'attack', 8, isSiege ? 10 : 8),
     },
     [`${unitId}_die`]: {
-      directions: 1, fps: 10, loop: false, frameCount: 10,
+      id: `${unitId}_die`,
+      directions: 1, fps: 8, loop: false, frameCount: 10,
       frameKeys: buildFrameKeys(unitId, 'die', 1, 10),
     },
   };
@@ -75,10 +80,8 @@ export function buildFullManifest(): Record<string, AnimationDef> {
 export function registerAllUnitAnimations(animSystem: AnimationSystem): void {
   for (const id of STANDARD_UNIT_IDS) {
     const anims = buildUnitAnims(id);
-    for (const [fullName, def] of Object.entries(anims)) {
-      // fullName is like "militia_idle" — extract the action part
-      const action = fullName.slice(id.length + 1); // remove "unitId_" prefix
-      animSystem.registerAnimation(id, action, def);
+    for (const [animId, def] of Object.entries(anims)) {
+      animSystem.registerAnimation(animId, def);
     }
   }
 }

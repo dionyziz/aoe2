@@ -1,14 +1,14 @@
 import type { UnitInstance } from '../../types/unit';
+import { UnitStateId } from '../../types/unit';
 import type { AnimationDef } from '../../types/animation';
 
-// Maps UnitStateId → animation action name
+// Maps UnitStateId enum value → animation action name
 const STATE_TO_ACTION: Record<string, string> = {
-  idle: 'idle',
-  moving: 'walk',
-  attacking: 'attack',
-  gathering: 'walk',
-  dead: 'die',
-  building: 'walk',
+  [UnitStateId.Idle]:      'idle',
+  [UnitStateId.Moving]:    'walk',
+  [UnitStateId.Attacking]: 'attack',
+  [UnitStateId.Gathering]: 'walk',
+  [UnitStateId.Dead]:      'die',
 };
 
 export class AnimationSystem {
@@ -36,7 +36,7 @@ export class AnimationSystem {
     }
   }
 
-  getFrameKey(unitDefId: string, state: string, direction: number, frame: number): string {
+  getFrameKey(unitDefId: string, state: UnitStateId, direction: number, frame: number): string {
     const action = STATE_TO_ACTION[state] ?? 'idle';
     const def = this.animDefs.get(unitDefId)?.get(action);
     if (!def) return `${unitDefId}_${action}_s_0`;

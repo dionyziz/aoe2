@@ -3,7 +3,15 @@ import type { WorldPos, TileCoord } from './common';
 export type UnitClass = 'infantry' | 'archer' | 'cavalry' | 'siege' | 'villager' | 'monk' | 'ship' | 'hero' | 'unique';
 export type UnitAge = 'dark' | 'feudal' | 'castle' | 'imperial';
 export type AttackType = 'melee' | 'ranged' | 'siege' | 'special';
-export type UnitStateId = 'idle' | 'moving' | 'attacking' | 'gathering' | 'dead' | 'building' | 'garrisoned';
+export enum UnitStateId {
+  Idle       = 'idle',
+  Moving     = 'moving',
+  Attacking  = 'attacking',
+  Gathering  = 'gathering',
+  Dead       = 'dead',
+  Building   = 'building',
+  Garrisoned = 'garrisoned',
+}
 export type CombatStance = 'aggressive' | 'defensive' | 'stand_ground' | 'no_attack';
 
 export interface ArmorClass { melee: number; pierce: number; }

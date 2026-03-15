@@ -2,7 +2,7 @@ import { TILE_WIDTH, TILE_HEIGHT } from '../../constants';
 import { TerrainType } from '../../types/map';
 import type { UnitInstance } from '../../types/unit';
 import type { Camera } from '../camera/Camera';
-import type { IsoProjection } from './IsoProjection';
+import type { IsoProjectionType } from './IsoProjection';
 
 // Re-export UnitClass from the canonical type definition
 export type { UnitClass } from '../../types/unit';
@@ -43,7 +43,7 @@ export class PlaceholderSprites {
     terrainType: TerrainType,
     elevation: number,
     camera: Camera,
-    iso: IsoProjection,
+    iso: IsoProjectionType,
   ): void {
     const { x: sx, y: sy } = iso.worldToScreen(tx + 0.5, ty + 0.5, elevation, camera);
     const zoom = camera.zoom;
@@ -84,7 +84,7 @@ export class PlaceholderSprites {
     ctx: CanvasRenderingContext2D,
     unit: UnitInstance,
     camera: Camera,
-    iso: IsoProjection,
+    iso: IsoProjectionType,
   ): void {
     const { x: sx, y: sy } = iso.worldToScreen(unit.pos.wx, unit.pos.wy, 0, camera);
     const zoom = camera.zoom;
@@ -137,7 +137,7 @@ export class PlaceholderSprites {
     playerId: number,
     isSelected: boolean,
     camera: Camera,
-    iso: IsoProjection,
+    iso: IsoProjectionType,
   ): void {
     const { x: sx, y: sy } = iso.worldToScreen(tx + footprintCols / 2, ty + footprintRows / 2, 0, camera);
     const zoom = camera.zoom;
@@ -191,7 +191,7 @@ export class PlaceholderSprites {
     ctx: CanvasRenderingContext2D,
     unit: UnitInstance,
     camera: Camera,
-    iso: IsoProjection,
+    iso: IsoProjectionType,
     maxHp: number,
   ): void {
     const { x: sx, y: sy } = iso.worldToScreen(unit.pos.wx, unit.pos.wy, 0, camera);
@@ -213,7 +213,7 @@ export class PlaceholderSprites {
     ctx: CanvasRenderingContext2D,
     unit: UnitInstance,
     camera: Camera,
-    iso: IsoProjection,
+    iso: IsoProjectionType,
   ): void {
     const { x: sx, y: sy } = iso.worldToScreen(unit.pos.wx, unit.pos.wy, 0, camera);
     const zoom = camera.zoom;

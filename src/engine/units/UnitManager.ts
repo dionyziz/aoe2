@@ -1,4 +1,5 @@
 import type { UnitInstance } from '../../types/unit';
+import { UnitStateId } from '../../types/unit';
 import type { WorldPos, Rect } from '../../types/common';
 import type { EventBus } from '../EventBus';
 import type { AStar } from '../pathfinding/AStar';
@@ -7,11 +8,13 @@ import type { IsoProjectionType } from '../renderer/IsoProjection';
 import type { Camera } from '../camera/Camera';
 import { createUnit } from './Unit';
 import { MovementSystem } from './MovementSystem';
+import { AnimationSystem } from '../animation/AnimationSystem';
 
 export class UnitManager {
   readonly units: UnitInstance[] = [];
   private selectedIds = new Set<number>();
   private movementSystem = new MovementSystem();
+  private animSystem = new AnimationSystem();
   private astar: AStar;
   private navGrid: NavGrid;
   private iso: IsoProjectionType;
@@ -107,7 +110,7 @@ export class UnitManager {
       if (path.length > 0) {
         unit.path = path;
         unit.pathIndex = 0;
-        unit.state = 'moving';
+        unit.state = UnitStateId.Moving;
         unit.targetPos = { wx: goal.tx + 0.5, wy: goal.ty + 0.5 };
       }
     });

@@ -1,4 +1,5 @@
 import type { UnitInstance } from '../../types/unit';
+import { UnitStateId } from '../../types/unit';
 
 let nextId = 1;
 
@@ -11,7 +12,7 @@ export function createUnit(defId: string, playerId: number, wx: number, wy: numb
     targetPos: null,
     path: [],
     pathIndex: 0,
-    state: 'idle',
+    state: UnitStateId.Idle,
     currentHp: 40,
     direction: 0,
     animFrame: 0,

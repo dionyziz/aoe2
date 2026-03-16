@@ -5,10 +5,13 @@ import { CameraController } from './camera/CameraController';
 import { Renderer } from './renderer/Renderer';
 import { InputManager } from './input/InputManager';
 import { MapData } from './map/MapData';
+import { NavGrid } from './pathfinding/NavGrid';
+import { AStar } from './pathfinding/AStar';
+import { UnitManager } from './units/UnitManager';
+import { IsoProjection } from './renderer/IsoProjection';
 import { TerrainType } from '../types/map';
 import type { MapData as MapDataType } from '../types/map';
 import type { TileData } from '../types/map';
-import type { UnitInstance } from '../types/unit';
 import type { BuildingInstance } from '../types/building';
 
 export class Game {
@@ -19,7 +22,9 @@ export class Game {
   private renderer: Renderer;
   private mapStore: MapData | null = null;
   private loop: GameLoop;
-  private units: UnitInstance[] = [];
+  private navGrid: NavGrid | null = null;
+  private astar: AStar;
+  private unitManager: UnitManager | null = null;
   private buildings: BuildingInstance[] = [];
 
   constructor(private canvas: HTMLCanvasElement) {
@@ -37,6 +42,7 @@ export class Game {
     this.cameraController = new CameraController(this.camera, this.eventBus);
     this.inputManager = new InputManager(canvas, this.camera, this.eventBus);
     this.renderer = new Renderer(ctx, this.camera, this.eventBus);
+    this.astar = new AStar();
     this.loop = new GameLoop(
       (dt) => this.update(dt),
       (alpha) => this.render(alpha),
@@ -77,6 +83,12 @@ export class Game {
       playerStarts: [{ tx: 4, ty: 4 }, { tx: 28, ty: 28 }],
     };
     this.mapStore = new MapData(mapDataType);
+    this.navGrid = new NavGrid(this.mapStore);
+    this.unitManager = new UnitManager(this.eventBus, this.astar, this.navGrid, IsoProjection, this.camera);
+    this.unitManager.spawn('militia', 1, 4.5, 4.5);
+    this.unitManager.spawn('militia', 1, 5.5, 4.5);
+    this.unitManager.spawn('militia', 1, 4.5, 5.5);
+    this.unitManager.spawn('militia', 2, 27.5, 27.5);
     this.camera.setMapSize(32, 32);
     this.renderer.setMap(this.mapStore);
     this.camera.centerOn(16, 16);
@@ -93,12 +105,13 @@ export class Game {
 
   private update(dt: number): void {
     this.cameraController.update(dt);
+    this.unitManager?.update(dt);
     // Emit camera:moved every tick so terrain cache stays in sync
     this.eventBus.emit('camera:moved', undefined as never);
   }
 
   private render(alpha: number): void {
-    this.renderer.render(alpha, this.units, this.buildings, this.loop.fps);
+    this.renderer.render(alpha, this.unitManager?.units ?? [], this.buildings, this.loop.fps);
   }
 
   private onResize(): void {

@@ -1,6 +1,6 @@
 import type { Camera } from '../camera/Camera';
 import type { EventBus } from '../EventBus';
-import type { MapData } from '../map/MapData';
+import { MapData } from '../map/MapData';
 import type { UnitInstance } from '../../types/unit';
 import type { BuildingInstance } from '../../types/building';
 import { TerrainRenderer } from './TerrainRenderer';
@@ -11,6 +11,7 @@ export class Renderer {
   private terrainRenderer: TerrainRenderer;
   private entityRenderer: EntityRenderer;
   private uiRenderer: UIRenderer;
+  private mapData: MapData | null = null;
 
   constructor(
     private ctx: CanvasRenderingContext2D,
@@ -24,6 +25,7 @@ export class Renderer {
   }
 
   setMap(mapData: MapData): void {
+    this.mapData = mapData;
     this.terrainRenderer.setMap(mapData);
   }
 
@@ -32,6 +34,10 @@ export class Renderer {
     this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     this.terrainRenderer.render();
     this.entityRenderer.render(units, buildings, alpha);
+    this.uiRenderer.drawResourcePlaceholder(this.ctx);
+    if (this.mapData !== null) {
+      this.uiRenderer.drawMinimap(this.ctx, this.mapData, units);
+    }
     this.uiRenderer.drawFPS(this.ctx, fps);
   }
 

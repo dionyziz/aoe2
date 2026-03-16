@@ -6,12 +6,14 @@ import type { BuildingInstance } from '../../types/building';
 import { TerrainRenderer } from './TerrainRenderer';
 import { EntityRenderer } from './EntityRenderer';
 import { UIRenderer } from './UIRenderer';
+import type { MouseState } from '../input/MouseState';
 
 export class Renderer {
   private terrainRenderer: TerrainRenderer;
   private entityRenderer: EntityRenderer;
   private uiRenderer: UIRenderer;
   private mapData: MapData | null = null;
+  private mouse: MouseState | null = null;
 
   constructor(
     private ctx: CanvasRenderingContext2D,
@@ -24,6 +26,10 @@ export class Renderer {
     eventBus.on('camera:moved', () => this.terrainRenderer.invalidate());
   }
 
+  setMouseState(mouse: MouseState): void {
+    this.mouse = mouse;
+  }
+
   setMap(mapData: MapData): void {
     this.mapData = mapData;
     this.terrainRenderer.setMap(mapData);
@@ -34,6 +40,9 @@ export class Renderer {
     this.ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     this.terrainRenderer.render();
     this.entityRenderer.render(units, buildings, alpha);
+    if (this.mouse?.isDragging) {
+      this.uiRenderer.drawSelectionRect(this.ctx, this.mouse.dragRect);
+    }
     this.uiRenderer.drawResourcePlaceholder(this.ctx);
     if (this.mapData !== null) {
       this.uiRenderer.drawMinimap(this.ctx, this.mapData, units);

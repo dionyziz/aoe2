@@ -42,6 +42,7 @@ export class Game {
     this.cameraController = new CameraController(this.camera, this.eventBus);
     this.inputManager = new InputManager(canvas, this.camera, this.eventBus);
     this.renderer = new Renderer(ctx, this.camera, this.eventBus);
+    this.renderer.setMouseState(this.inputManager.mouse);
     this.astar = new AStar();
     this.loop = new GameLoop(
       (dt) => this.update(dt),
